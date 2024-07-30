@@ -43,14 +43,6 @@ public class CoreParams {
     private String wxMpAuthUserInfoUrl;
     private String wxMpAuthMobileUrl;
 
-    // wx pay
-    private String wxPayMerchantId;
-    private String wxPayPrivateKeyPath;
-    private String wxPayMerchantSerialNumber;
-    private String wxPayApiV3Key;
-    private String wxPayApId;
-    private String wxPayCertificatePath;
-    private String wxPayNotifyUrlPrefix;
 
     // token key
     private String accessTokenEncodeKey;

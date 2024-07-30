@@ -12,6 +12,7 @@ import cn.lime.core.service.db.UserService;
 import cn.lime.core.service.db.UserthirdauthorizationService;
 import cn.lime.core.service.login.UniLogService;
 import cn.lime.core.service.oss.QiNiuOssService;
+import cn.lime.core.service.phone.BasePhoneService;
 import cn.lime.core.service.wx.auth.WxMpOuterService;
 import cn.lime.core.service.wx.bean.WxPhoneInfo;
 import cn.lime.core.snowflake.SnowFlakeGenerator;
