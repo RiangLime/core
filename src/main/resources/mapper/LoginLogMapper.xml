@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lime.core.mapper.LoginLogMapper">
+
+    <resultMap id="BaseResultMap" type="cn.lime.core.module.entity.LoginLog">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+            <result property="loginTime" column="login_time" jdbcType="TIMESTAMP"/>
+            <result property="loginPlatform" column="login_platform" jdbcType="TINYINT"/>
+            <result property="loginSource" column="login_source" jdbcType="TINYINT"/>
+            <result property="gmtCreated" column="gmt_created" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,login_ip,
+        login_time,login_platform,login_source,
+        gmt_created
+    </sql>
+</mapper>

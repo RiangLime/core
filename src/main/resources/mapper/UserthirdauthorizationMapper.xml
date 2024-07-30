@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lime.core.mapper.UserthirdauthorizationMapper">
+
+    <resultMap id="BaseResultMap" type="cn.lime.core.module.entity.Userthirdauthorization">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="personnelId" column="personnel_id" jdbcType="BIGINT"/>
+            <result property="appPlatform" column="app_platform" jdbcType="INTEGER"/>
+            <result property="thirdType" column="third_type" jdbcType="INTEGER"/>
+            <result property="thirdFirstTag" column="third_first_tag" jdbcType="VARCHAR"/>
+            <result property="thirdSecondTag" column="third_second_tag" jdbcType="VARCHAR"/>
+            <result property="gmtCreated" column="gmt_created" jdbcType="VARCHAR"/>
+            <result property="gmtModified" column="gmt_modified" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,personnel_id,app_platform,
+        third_type,third_first_tag,third_second_tag,
+        gmt_created,gmt_modified
+    </sql>
+</mapper>

@@ -11,8 +11,9 @@ Biz modules can use this core module in pom and get started easily with proper c
 ### Configs
 
 To get started, u need to set configurations below properly in yaml which in biz module. 
-
+All params defined in CoreParams.java
 ```yaml
+base.snowflake.
 ```
 
 
