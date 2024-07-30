@@ -55,4 +55,8 @@ public class CoreParams {
     // token key
     private String accessTokenEncodeKey;
 
+    // file storage
+    private String fileStoragePath;
+    private String fileStorageUrlPrefix;
+
 }
