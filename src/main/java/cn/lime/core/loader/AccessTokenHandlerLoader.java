@@ -19,7 +19,7 @@ public class AccessTokenHandlerLoader {
     private CoreParams params;
 
     @Bean
-    public AccessTokenHandler aesUtils(){
-        return new AccessTokenHandler(params.getAccessTokenEncodeKey());
+    public AccessTokenHandler accessTokenHandler(){
+        return new AccessTokenHandler(params.getAccessTokenEncodeKey(),params.getAccessTokenExpires(),params.getRefreshTokenExpireHours());
     }
 }

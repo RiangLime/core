@@ -32,7 +32,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Aspect
 @Component
 @Slf4j
-@Order(2)
+@Order(3)
 public class AuthInterceptor {
 
     private static final String TOKEN_HEADER = "Authorization";

@@ -85,17 +85,20 @@ public class User implements Serializable {
     @TableField(value = "status")
     private Integer status;
 
+    @TableField(value = "role")
+    private Integer role;
+
     /**
      * 创建时间
      */
     @TableField(value = "gmt_created")
-    private String gmtCreated;
+    private Date gmtCreated;
 
     /**
      * 更新时间
      */
     @TableField(value = "gmt_modified")
-    private String gmtModified;
+    private Date gmtModified;
 
     private static final long serialVersionUID = 1L;
 

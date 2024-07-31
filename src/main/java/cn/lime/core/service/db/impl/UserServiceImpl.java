@@ -1,13 +1,14 @@
 package cn.lime.core.service.db.impl;
 
-import cn.lime.core.common.BusinessException;
-import cn.lime.core.common.ErrorCode;
-import cn.lime.core.common.ThrowUtils;
+import cn.lime.core.common.*;
+import cn.lime.core.config.CoreParams;
+import cn.lime.core.constant.YesNoEnum;
 import cn.lime.core.mapper.UserMapper;
 import cn.lime.core.module.bean.OssUploadRsp;
 import cn.lime.core.module.entity.User;
 import cn.lime.core.module.entity.Userthirdauthorization;
 import cn.lime.core.module.vo.LoginVo;
+import cn.lime.core.module.vo.UserVo;
 import cn.lime.core.service.db.UserService;
 import cn.lime.core.service.db.UserthirdauthorizationService;
 import cn.lime.core.service.login.UniLogService;
@@ -18,6 +19,7 @@ import cn.lime.core.service.wx.bean.WxPhoneInfo;
 import cn.lime.core.snowflake.SnowFlakeGenerator;
 import cn.lime.core.threadlocal.ReqThreadLocal;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qiniu.common.QiniuException;
 import jakarta.annotation.Resource;
@@ -30,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
 * @author riang
@@ -40,10 +43,8 @@ import java.util.Date;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService {
 
-    @Value("${apply-easy.wx.mp.app-key}")
-    private String appId;
-    @Value("${apply-easy.wx.mp.app-secret}")
-    private String secretId;
+    @Resource
+    private CoreParams coreParams;
     @Resource
     private SnowFlakeGenerator snowFlakeGenerator;
     @Resource
@@ -65,7 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 检查账户是否存在
         ThrowUtils.throwIf(lambdaQuery().eq(User::getAccount, account).exists(), ErrorCode.ACCOUNT_EXIST);
         ThrowUtils.throwIf(lambdaQuery().eq(User::getPhone, phone).exists(), ErrorCode.PHONE_EXIST);
-        // 进行PeerReview的注册
+        // 进行注册
         User user = new User(snowFlakeGenerator.nextId(), account, pwd, nickname, avatar, phone, email, sex, birth, birthplace);
         ThrowUtils.throwIf(!save(user), ErrorCode.INSERT_ERROR, "注册用户信息失败");
     }
@@ -81,28 +82,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 更新手机号
         ThrowUtils.throwIf(lambdaUpdate().eq(User::getUserId, ReqThreadLocal.getInfo().getUserId())
                 .set(User::getPhone, newPhone).update(), ErrorCode.UPDATE_ERROR, "更新用户手机号失败");
-    }
-
-    @Override
-    public void updateUserAvatar(MultipartFile file, Long userId) {
-        User user = getById(userId);
-        ThrowUtils.throwIf(ObjectUtils.isEmpty(user),ErrorCode.NOT_FOUND_ERROR);
-        if (StringUtils.isNotEmpty(user.getAvatar())){
-            String[] strArr = StringUtils.split(user.getAvatar(),"/");
-            String fileName = strArr[strArr.length-1];
-            try {
-                ossService.deleteRemoteByFilename(fileName,userId);
-            }catch (QiniuException e){
-                log.error("删除用户头像异常" + user.getAvatar(),e);
-            }
-        }
-        try {
-            OssUploadRsp rsp = ossService.uploadFile(file.getBytes(),file.getName(),userId);
-            ThrowUtils.throwIf(!lambdaUpdate().eq(User::getUserId,userId).set(User::getAvatar,rsp.getFileUrl()).update()
-                    ,ErrorCode.UPDATE_ERROR,"更新用户头像至数据库异常");
-        }catch (IOException e){
-            throw new BusinessException(ErrorCode.IO_ERROR,"获取字节流异常");
-        }
     }
 
     @Override
@@ -181,7 +160,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Transactional
     public LoginVo bindPhoneByPhoneCode(String phoneCode) {
         // 获取手机号
-        WxPhoneInfo wxPhoneInfo = wxMpOuterService.getWxPhoneInfo(appId, secretId, phoneCode);
+        WxPhoneInfo wxPhoneInfo = wxMpOuterService.getWxPhoneInfo(coreParams.getWxMpAppId(), coreParams.getWxMpSecretId(), phoneCode);
         ThrowUtils.throwIf(ObjectUtils.isEmpty(wxPhoneInfo), ErrorCode.WX_PHONE_INTERFACE_ERROR);
         return doBindPhone(wxPhoneInfo.getPurePhoneNumber());
     }
@@ -213,6 +192,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
             return uniLogService.generateToken(personnel,ReqThreadLocal.getInfo().getPlatform(), ReqThreadLocal.getInfo().getIp());
         }
+    }
+
+    @Override
+    public PageResult<UserVo> page(String queryField, Long registerStart, Long registerEnd,
+                                   Integer userState, Integer userVipLevel,
+                                   Integer current, Integer pageSize,String sortOrder,String sortField) {
+        Page<?> page = PageUtils.build(current,pageSize,sortField,sortOrder);
+        Page<UserVo> result = baseMapper.pageWithoutMall(queryField,registerStart,registerEnd,userState,userVipLevel,page);
+        return new PageResult<>(result);
+    }
+
+    @Override
+    public PageResult<UserVo> page(String queryField, Long registerStart, Long registerEnd, Integer userState,
+                                   Integer userVipLevel, Integer spendMoneyStart, Integer spendMoneyEnd,
+                                   Integer current, Integer pageSize,String sortOrder,String sortField) {
+        return null;
+    }
+
+    @Override
+    public List<User> list(Integer current, Integer pageSize, String sortOrder, String sortField) {
+        return lambdaQuery().list();
+    }
+
+    @Override
+    public boolean freeze(Long userId) {
+        return lambdaUpdate().set(User::getUserId,userId).set(User::getStatus, YesNoEnum.NO.getVal()).update();
+    }
+
+    @Override
+    public boolean unfreeze(Long userId) {
+        return lambdaUpdate().set(User::getUserId,userId).set(User::getStatus, YesNoEnum.YES.getVal()).update();
     }
 }
 

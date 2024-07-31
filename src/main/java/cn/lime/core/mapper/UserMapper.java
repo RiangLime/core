@@ -1,7 +1,9 @@
 package cn.lime.core.mapper;
 
 import cn.lime.core.module.entity.User;
+import cn.lime.core.module.vo.UserVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
 * @author riang
@@ -10,7 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity cn.queertech.applyeasybackend.base.module.entity.User
 */
 public interface UserMapper extends BaseMapper<User> {
-
+    Page<UserVo> pageWithoutMall(String queryField, Long registerStart, Long registerEnd, Integer userState, Integer userVipLevel,Page<?> page);
 }
 
 

@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.apache.ibatis.type.JdbcType;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 用户登录日志表
@@ -37,7 +37,7 @@ public class LoginLog implements Serializable {
      * 登录时间
      */
     @TableField(value = "login_time")
-    private Date loginTime;
+    private Long loginTime;
 
     /**
      * 登录平台 1微信小程序 2PC端 3安卓APP 4苹果APP 5iOS平板
@@ -49,7 +49,7 @@ public class LoginLog implements Serializable {
      * 创建时间
      */
     @TableField(value = "gmt_created")
-    private String gmtCreated;
+    private Long gmtCreated;
 
     private static final long serialVersionUID = 1L;
 }

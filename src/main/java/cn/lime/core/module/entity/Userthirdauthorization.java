@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.ibatis.type.JdbcType;
 
 import java.io.Serializable;
 
@@ -59,13 +60,13 @@ public class Userthirdauthorization implements Serializable {
      * 创建时间
      */
     @TableField(value = "gmt_created")
-    private String gmtCreated;
+    private Long gmtCreated;
 
     /**
      * 更新时间
      */
     @TableField(value = "gmt_modified")
-    private String gmtModified;
+    private Long gmtModified;
 
     private static final long serialVersionUID = 1L;
 

@@ -5,26 +5,61 @@
 <mapper namespace="cn.lime.core.mapper.UserMapper">
 
     <resultMap id="BaseResultMap" type="cn.lime.core.module.entity.User">
-            <id property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="account" column="account" jdbcType="VARCHAR"/>
-            <result property="password" column="password" jdbcType="VARCHAR"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
-            <result property="phone" column="phone" jdbcType="VARCHAR"/>
-            <result property="email" column="email" jdbcType="VARCHAR"/>
-            <result property="sex" column="sex" jdbcType="TINYINT"/>
-            <result property="birthday" column="birthday" jdbcType="TIMESTAMP"/>
-            <result property="birthplace" column="birthplace" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="gmtCreated" column="gmt_created" jdbcType="VARCHAR"/>
-            <result property="gmtModified" column="gmt_modified" jdbcType="VARCHAR"/>
+        <id property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="account" column="account" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="TINYINT"/>
+        <result property="birthday" column="birthday" jdbcType="TIMESTAMP"/>
+        <result property="birthplace" column="birthplace" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="role" column="role" jdbcType="TINYINT"/>
+        <result property="gmtCreated" column="gmt_created" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        user_id,account,password,
-        name,avatar,phone,
+        user_id
+        ,account,password,
+        name,avatar,phone,role,
         email,sex,birthday,
         birthplace,status,gmt_created,
         gmt_modified
     </sql>
+    <select id="pageWithoutMall" resultType="cn.lime.core.module.vo.UserVo">
+        select u.user_id,
+        u.account,
+        u.name,
+        u.avatar,
+        u.phone,
+        u.role,
+        u.email,
+        u.sex,
+        u.birthday,
+        u.birthplace,
+        u.status
+        ,UNIX_TIMESTAMP(u.gmt_created) as gmt_created,
+        MAX(ll.login_time) AS last_login_time from User u
+        left join Login_Log ll on
+        ll.user_id = u.user_id
+        group by u.user_id,u.name,u.account,u.phone,u.gmt_created,u.status
+        having 1=1
+        <if test="queryField != null">
+            and (u.name like CONCAT('%', #{queryField}, '%')
+            or u.account like CONCAT('%', #{queryField}, '%')
+            or u.phone like CONCAT('%', #{queryField}, '%'))
+        </if>
+        <if test="registerStart != null">
+            and u.gmt_created &gt;= FROM_UNIXTIME(#{registerStart})
+        </if>
+        <if test="registerEnd != null">
+            and u.gmt_created &lt;= FROM_UNIXTIME(#{registerEnd})
+        </if>
+        <if test="userState != null">
+            and u.status = #{userState}
+        </if>
+    </select>
 </mapper>

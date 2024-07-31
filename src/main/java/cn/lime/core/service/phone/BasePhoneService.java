@@ -37,7 +37,7 @@ public class BasePhoneService {
      * 根据配置选择使用用户中心统一发送验证码或机构自己配置
      */
     public void sendMessage(String mobilePhone){
-
+        ThrowUtils.throwIf(!aliPhoneService.initSuccess() || redisTemplateMap.isEmpty(),ErrorCode.INIT_FAIL,"短信功能初始化失败");
         // 核验缓存中是否有验证码，如果有验证码则不进行发送短信
         boolean exist = Boolean.TRUE.equals(redisTemplateMap.get(RedisDb.VERIFICATION.getVal()).hasKey(mobilePhone));
         ThrowUtils.throwIf(exist, ErrorCode.MOBILE_PHONE_MESSAGE_ERROR, "距上次发送短信验证码未满" + messageTtl + "min,您仍可使用旧验证码");
@@ -50,6 +50,7 @@ public class BasePhoneService {
 
 
     public boolean checkCode(String mobilePhone, String code) {
+        ThrowUtils.throwIf(!aliPhoneService.initSuccess() || redisTemplateMap.isEmpty(),ErrorCode.INIT_FAIL,"短信功能初始化失败");
         String cacheCode = redisTemplateMap.get(RedisDb.VERIFICATION.getVal()).opsForValue().get(mobilePhone);
         return StringUtils.equals(cacheCode, code);
     }

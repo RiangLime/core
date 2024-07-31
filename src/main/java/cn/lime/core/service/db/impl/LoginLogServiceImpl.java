@@ -27,7 +27,7 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog>
         log.setLoginIp(ip);
         log.setUserId(userId);
         log.setLoginPlatform(platform);
-        log.setLoginTime(new Date());
+        log.setLoginTime(System.currentTimeMillis());
         save(log);
     }
 }

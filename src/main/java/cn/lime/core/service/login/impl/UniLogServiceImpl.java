@@ -1,8 +1,10 @@
 package cn.lime.core.service.login.impl;
 
+import cn.lime.core.aes.AesUtils;
 import cn.lime.core.common.BusinessException;
 import cn.lime.core.common.ErrorCode;
 import cn.lime.core.common.ThrowUtils;
+import cn.lime.core.config.CoreParams;
 import cn.lime.core.constant.*;
 import cn.lime.core.module.bean.AppKeySecretInfo;
 import cn.lime.core.module.bean.AuthInfo;
@@ -25,14 +27,6 @@ import cn.lime.core.service.wx.bean.WxAuthorizeInfo;
 import cn.lime.core.snowflake.SnowFlakeGenerator;
 import cn.lime.core.threadlocal.ReqThreadLocal;
 import cn.lime.core.token.AccessTokenHandler;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,27 +64,14 @@ public class UniLogServiceImpl implements UniLogService {
     private BasePhoneService mobileService;
     @Resource
     protected Map<Integer, StringRedisTemplate> redisTemplateMap;
-    @Value("${apply-easy.login-access-token-timeout:3}")
-    private int accessTokenTimeoutHours;
-    @Value("${apply-easy.login-refresh-token-timeout:720}")
-    private int refreshTokenTimeoutHours;
     @Resource
     private SnowFlakeGenerator ids;
-    @Value("${apply-easy.wx.mp.app-key}")
-    private String wxMpAppKey;
-    @Value("${apply-easy.wx.mp.app-secret}")
-    private String wxMpAppSecret;
-    @Value("${apply-easy.wx.h5.app-key}")
-    private String wxH5AppKey;
-    @Value("${apply-easy.wx.h5.app-secret}")
-    private String wxH5AppSecret;
-    @Value("${apply-easy.institution-id}")
-    private Long institutionId;
-
     @Resource
     private AccessTokenHandler accessTokenHandler;
-
-    private static final String ENCODE_KEY = "QueerTechnology";
+    @Resource
+    private CoreParams coreParams;
+    @Resource
+    private AesUtils aesUtils;
 
 
     @Override
@@ -118,8 +99,8 @@ public class UniLogServiceImpl implements UniLogService {
         String unionId = "";
 
         AppKeySecretInfo appKeySecretInfo = platform == 1 ?
-                new AppKeySecretInfo(wxMpAppKey, wxMpAppSecret) :
-                new AppKeySecretInfo(wxH5AppKey, wxH5AppSecret);
+                new AppKeySecretInfo(coreParams.getWxMpAppId(), coreParams.getWxMpSecretId()) :
+                new AppKeySecretInfo(coreParams.getWxH5AppId(), coreParams.getWxH5SecretId());
         if (platform.equals(PlatformEnum.MP.getVal())) {
             // 获取OPENID
             WxAuthorizeInfo authorizeInfo = wxMpOuterService.getWxAuthorizeInfo(appKeySecretInfo.getAppKey()
@@ -230,7 +211,13 @@ public class UniLogServiceImpl implements UniLogService {
     private LoginVo loginAccount(AccountLoginDto dto) {
         User user = userService.lambdaQuery().eq(User::getAccount, dto.getAccount()).one();
         ThrowUtils.throwIf(ObjectUtils.isEmpty(user), ErrorCode.NOT_FOUND_ERROR, "该账号不存在");
-        ThrowUtils.throwIf(!user.getPassword().equals(dto.getPwd()), ErrorCode.PWD_ERROR, "用户密码错误");
+        try {
+            String decode = aesUtils.decrypt(dto.getPwd());
+            ThrowUtils.throwIf(!user.getPassword().equals(decode), ErrorCode.PWD_ERROR, "用户密码错误");
+        }catch (Exception e){
+            throw new BusinessException(ErrorCode.IO_ERROR,"解密用户密码失败");
+        }
+
         Integer platform = ReqThreadLocal.getInfo().getPlatform();
         // 进行登录
         LoginVo loginVo = generateToken(user, platform,
@@ -244,7 +231,7 @@ public class UniLogServiceImpl implements UniLogService {
     public LoginVo generateToken(User user, Integer platform, String ip) {
         ThrowUtils.throwIf(!userService.lambdaQuery().eq(User::getUserId, user.getUserId()).exists(),
                 ErrorCode.NOT_FOUND_ERROR, "未找到相关账号信息");
-        String accessToken = accessTokenHandler.getToken(user,1,1);
+        String accessToken = accessTokenHandler.getToken(user, 1, 1);
         String refreshToken = UUID.randomUUID().toString().replaceAll("-", "");
         return doLogin(accessToken, refreshToken, user.getUserId(), platform, ip);
 
@@ -261,10 +248,10 @@ public class UniLogServiceImpl implements UniLogService {
         String refreshKey = "refresh_" + userId + "_" + refreshToken;
         // 存放新的REFRESH token
         redisTemplateMap.get(RedisDb.TOKEN.getVal()).opsForValue()
-                .set(refreshKey, String.valueOf(userId), Duration.ofHours(refreshTokenTimeoutHours));
+                .set(refreshKey, String.valueOf(userId), Duration.ofHours(accessTokenHandler.getRefreshTokenExpire()));
         Long refreshTtl = redisTemplateMap.get(RedisDb.TOKEN.getVal()).opsForValue().getOperations().getExpire(refreshKey);
         loginLogService.appendLog(userId, ip, platform);
-        return new LoginVo(userId, token, refreshToken, AccessTokenHandler.ACCESS_TOKEN_EXPIRE_MILLS / 1000, refreshTtl);
+        return new LoginVo(userId, token, refreshToken, accessTokenHandler.getAccessTokenExpire() / 1000, refreshTtl);
     }
 
     @Override
@@ -295,7 +282,7 @@ public class UniLogServiceImpl implements UniLogService {
         // 重新生成token
         User user = userService.getById(uid);
         ThrowUtils.throwIf(ObjectUtils.isEmpty(user), ErrorCode.NOT_FOUND_ERROR);
-        return accessTokenHandler.getToken(user,1,1);
+        return accessTokenHandler.getToken(user, 1, 1);
     }
 
     @Override

@@ -30,11 +30,23 @@ public class AccessTokenHandler {
     private static final JWTCreator.Builder JWT_BUILDER = JWT.create();
 
     private final String encodeKey;
+    private final long accessTokenExpire;
+    private final int refreshTokenExpire;
 
     public static final Long ACCESS_TOKEN_EXPIRE_MILLS = 1000 * 60 * 60 * 3L;
 
-    public AccessTokenHandler(String key) {
+    public AccessTokenHandler(String key, Long accessTokenExpire, int refreshTokenExpire) {
         encodeKey = key;
+        this.accessTokenExpire = accessTokenExpire;
+        this.refreshTokenExpire = refreshTokenExpire;
+    }
+
+    public Long getAccessTokenExpire() {
+        return accessTokenExpire;
+    }
+
+    public int getRefreshTokenExpire() {
+        return refreshTokenExpire;
     }
 
     /**
@@ -42,7 +54,7 @@ public class AccessTokenHandler {
      *
      * @return
      */
-    public String getToken(User user,Integer authLevel,Integer vipLevel) {
+    public String getToken(User user, Integer authLevel, Integer vipLevel) {
 
         //由于该生成器设置Header的参数为一个<String, Object>的Map,
         //所以我们提前准备好
@@ -59,7 +71,7 @@ public class AccessTokenHandler {
                 .withClaim("userId", user.getUserId())
 //                .withClaim("auth", JSON.toJSONString(authInfoArr))
                 //token失效时间，3小时失效
-                .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_MILLS))
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpire))
                 //设置该jwt的发行时间，一般为当前系统时间
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 //进行签名，选择加密算法，以一个字符串密钥为参数

@@ -40,12 +40,15 @@ public class UserVo implements Serializable {
     private Date birthday;
     @Schema(description = "籍贯")
     private String birthplace;
-
     @Schema(description = "注册时间")
     @JsonFormat(pattern="yyyy-MM-dd:hh-mm-ss")
-    private Date gmtCreated;
+    private Long gmtCreated;
+    @Schema(description = "最后一次登录时间")
+    private Long lastLoginTime;
     @Schema(description = "用户状态")
-    private Integer state;
+    private Integer status;
+    @Schema(description = "用户角色 1用户2管理员")
+    private Integer role;
 
     public UserVo(User personnel) {
         userId = personnel.getUserId();
@@ -57,6 +60,6 @@ public class UserVo implements Serializable {
         sex = personnel.getSex();
         birthday = personnel.getBirthday();
         birthplace = personnel.getBirthplace();
-        state = personnel.getStatus();
+        status = personnel.getStatus();
     }
 }
