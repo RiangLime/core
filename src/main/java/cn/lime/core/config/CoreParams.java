@@ -22,7 +22,7 @@ public class CoreParams {
     // aes
     @Value("${core.aes.key:1234123412341234}")
     private String key;
-    @Value("${core.aes.iv:0}")
+    @Value("${core.aes.iv:1234123412341234}")
     private String iv;
 
     // ai
