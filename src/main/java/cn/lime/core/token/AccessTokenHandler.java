@@ -70,6 +70,8 @@ public class AccessTokenHandler {
                 //设置用户id
                 .withClaim("userId", user.getUserId())
 //                .withClaim("auth", JSON.toJSONString(authInfoArr))
+                .withClaim("authLevel",authLevel)
+                .withClaim("vipLevel",vipLevel)
                 //token失效时间，3小时失效
                 .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpire))
                 //设置该jwt的发行时间，一般为当前系统时间
@@ -102,6 +104,8 @@ public class AccessTokenHandler {
         TokenCheckVo vo = new TokenCheckVo();
         // 解析userId
         Long userId = decode.getClaim("userId").asLong();
+        Integer authLevel = decode.getClaim("authLevel").asInt();
+        Integer vipLevel = decode.getClaim("vipLevel").asInt();
 
         // 解析过期时间
         Date expireDate = decode.getExpiresAt();
@@ -111,6 +115,8 @@ public class AccessTokenHandler {
         ThrowUtils.throwIf(expireDate.getTime() <= System.currentTimeMillis(),
                 ErrorCode.INVALID_ACCESS_TOKEN, "token已经过期");
         vo.setUserId(userId);
+        vo.setAuthLevel(authLevel);
+        vo.setVipLevel(vipLevel);
 
         return vo;
     }

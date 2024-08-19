@@ -231,7 +231,7 @@ public class UniLogServiceImpl implements UniLogService {
     public LoginVo generateToken(User user, Integer platform, String ip) {
         ThrowUtils.throwIf(!userService.lambdaQuery().eq(User::getUserId, user.getUserId()).exists(),
                 ErrorCode.NOT_FOUND_ERROR, "未找到相关账号信息");
-        String accessToken = accessTokenHandler.getToken(user, 1, 1);
+        String accessToken = accessTokenHandler.getToken(user, user.getRole(), 1);
         String refreshToken = UUID.randomUUID().toString().replaceAll("-", "");
         return doLogin(accessToken, refreshToken, user.getUserId(), platform, ip);
 
@@ -282,7 +282,7 @@ public class UniLogServiceImpl implements UniLogService {
         // 重新生成token
         User user = userService.getById(uid);
         ThrowUtils.throwIf(ObjectUtils.isEmpty(user), ErrorCode.NOT_FOUND_ERROR);
-        return accessTokenHandler.getToken(user, 1, 1);
+        return accessTokenHandler.getToken(user, user.getRole(), 1);
     }
 
     @Override
