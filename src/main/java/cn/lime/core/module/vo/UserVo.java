@@ -22,6 +22,7 @@ import java.util.Date;
 public class UserVo implements Serializable {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @Schema(description = "用户ID")
     private Long userId;
     @Schema(description = "账号")
     private String account;
