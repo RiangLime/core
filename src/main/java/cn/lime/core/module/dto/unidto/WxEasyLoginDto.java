@@ -23,6 +23,4 @@ public class WxEasyLoginDto extends UniEasyLoginDto implements Serializable {
     @Schema(description = "登录小程序端获取到的code")
     @NotNull
     private String openIdCode;
-    @Schema(description = "邀请用户ID")
-    private String inviteUserCode;
 }

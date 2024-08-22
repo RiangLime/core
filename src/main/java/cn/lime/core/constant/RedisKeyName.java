@@ -8,7 +8,8 @@ package cn.lime.core.constant;
  */
 public enum RedisKeyName {
 
-    PAY_EXPIRE("order_pay")
+    PAY_EXPIRE("order_pay"),
+    BIZ_NOTICE_SUCCESS_PAID_ORDER("paid_order_id_notice_queue"),
     ;
 
     private final String val;
