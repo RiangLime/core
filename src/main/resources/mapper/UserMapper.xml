@@ -20,6 +20,20 @@
         <result property="gmtCreated" column="gmt_created" jdbcType="TIMESTAMP"/>
         <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
     </resultMap>
+    <resultMap id="userVo" type="cn.lime.core.module.vo.UserVo">
+        <id property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="account" column="account" jdbcType="VARCHAR"/>
+        <result property="nickName" column="name" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="role" column="role" jdbcType="INTEGER"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="INTEGER"/>
+        <result property="birthday" column="birthday" jdbcType="BIGINT"/>
+        <result property="birthplace" column="birthplace" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="registerTime" column="gmt_created" jdbcType="BIGINT"/>
+        <result property="lastLoginTime" column="last_login_time" jdbcType="BIGINT"/>
+    </resultMap>
 
     <sql id="Base_Column_List">
         user_id
@@ -38,7 +52,7 @@
         u.role,
         u.email,
         u.sex,
-        u.birthday,
+        UNIX_TIMESTAMP(u.birthday) as birthday,
         u.birthplace,
         u.status
         ,UNIX_TIMESTAMP(u.gmt_created) as gmt_created,
