@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 */
 public interface UserMapper extends BaseMapper<User> {
     Page<UserVo> pageWithoutMall(String queryField, Long registerStart, Long registerEnd, Integer userState, Integer userVipLevel,Page<?> page);
+    UserVo detail(Long userId);
 }
 
 

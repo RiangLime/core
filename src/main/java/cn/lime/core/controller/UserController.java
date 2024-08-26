@@ -5,14 +5,17 @@ import cn.lime.core.annotation.DtoCheck;
 import cn.lime.core.annotation.RequestLog;
 import cn.lime.core.common.BaseResponse;
 import cn.lime.core.common.ResultUtils;
+import cn.lime.core.constant.AuthLevel;
 import cn.lime.core.module.dto.*;
 import cn.lime.core.module.dto.unidto.*;
 import cn.lime.core.module.dto.user.*;
 import cn.lime.core.module.entity.User;
 import cn.lime.core.module.vo.LoginVo;
+import cn.lime.core.module.vo.UserVo;
 import cn.lime.core.service.db.UserService;
 import cn.lime.core.service.login.UniLogService;
 import cn.lime.core.service.phone.BasePhoneService;
+import cn.lime.core.threadlocal.ReqThreadLocal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -106,7 +109,7 @@ public class UserController {
 
     @PostMapping("/update/common")
     @Operation(summary = "用户更新信息 一般信息")
-    @AuthCheck(needToken = true,needPlatform = true)
+    @AuthCheck(needToken = true,authLevel = AuthLevel.USER)
     @DtoCheck(checkBindResult = true)
     public BaseResponse<Void> updateUserCommon(@Valid @RequestBody UserUpdateCommonDto request, BindingResult result) {
         userService.updateCommonInfo(request.getAccount(),request.getNickName(),request.getAvatar(),
@@ -116,7 +119,7 @@ public class UserController {
 
     @PostMapping("/update/pwd")
     @Operation(summary = "用户更新信息 密码")
-    @AuthCheck(needToken = true,needPlatform = true)
+    @AuthCheck(needToken = true,authLevel = AuthLevel.USER)
     @DtoCheck(checkBindResult = true)
     public BaseResponse<Void> updateUserPwd(@Valid @RequestBody UserUpdatePwdDto request, BindingResult result) {
         userService.updatePwdInfo(request.getPwd(),request.getNewPwd());
@@ -125,7 +128,7 @@ public class UserController {
 
     @PostMapping("/update/pwd/phone")
     @Operation(summary = "用户更新信息 通过手机号修改密码")
-    @AuthCheck(needToken = true,needPlatform = true)
+    @AuthCheck(needToken = true,authLevel = AuthLevel.USER)
     @DtoCheck(checkBindResult = true)
     public BaseResponse<Void> updateUserPwd(@Valid @RequestBody UserUpdatePwdByPhoneDto request, BindingResult result) {
         userService.updatePwdInfo(request.getMobile(),request.getCode(),request.getNewPwd());
@@ -134,7 +137,7 @@ public class UserController {
 
     @PostMapping("/update/mobile")
     @Operation(summary = "用户更新信息 手机号")
-    @AuthCheck(needToken = true,needPlatform = true)
+    @AuthCheck(needToken = true,authLevel = AuthLevel.USER)
     @DtoCheck(checkBindResult = true)
     public BaseResponse<Void> updateUserMobile(@Valid @RequestBody UserUpdatePhoneDto request, BindingResult result) {
         userService.updatePhone(request.getOldPhone(),request.getNewPhone(),request.getCode());
@@ -143,7 +146,7 @@ public class UserController {
 
     @PostMapping("/update/mobile/first")
     @Operation(summary = "用户首次绑定手机号 返回信息如果有值就是新登录信息")
-    @AuthCheck(needToken = true)
+    @AuthCheck(needToken = true,authLevel = AuthLevel.USER)
     @DtoCheck(checkBindResult = true)
     public BaseResponse<LoginVo> bindUserMobile(@Valid @RequestBody UserBindPhoneDto request, BindingResult result) {
         return ResultUtils.success(userService.bindPhoneByPhoneCode(request.getPhoneCode()));
@@ -151,7 +154,7 @@ public class UserController {
 
     @PostMapping("/update/mobile/first/byphone")
     @Operation(summary = "用户首次绑定手机号 返回信息如果有值就是新登录信息")
-    @AuthCheck(needToken = true)
+    @AuthCheck(needToken = true,authLevel = AuthLevel.USER)
     @DtoCheck(checkBindResult = true)
     public BaseResponse<LoginVo> bindUserMobile(@Valid @RequestBody PhoneEasyLoginDto request, BindingResult result) {
         return ResultUtils.success(userService.bindPhoneByPhone(request.getPhone(),request.getCode()));
@@ -159,11 +162,19 @@ public class UserController {
 
     @PostMapping("/logout")
     @Operation(summary = "登出")
-    @AuthCheck(needToken = true,needPlatform = true)
+    @AuthCheck(needToken = true,needPlatform = true,authLevel = AuthLevel.USER)
     @DtoCheck(checkBindResult = true)
     public BaseResponse<Void> logout(@Valid @RequestBody EmptyDto request, BindingResult result) {
         uniLogService.logout();
         return ResultUtils.success(null);
+    }
+
+    @PostMapping("/detail")
+    @Operation(summary = "用户详情")
+    @AuthCheck(needToken = true,needPlatform = true,authLevel = AuthLevel.USER)
+    @DtoCheck(checkBindResult = true)
+    public BaseResponse<UserVo> detail(@Valid @RequestBody EmptyDto request, BindingResult result) {
+        return ResultUtils.success(userService.detail(ReqThreadLocal.getInfo().getUserId()));
     }
 
 

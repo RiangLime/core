@@ -216,6 +216,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
+    public UserVo detail(Long userId) {
+        return baseMapper.detail(userId);
+    }
+
+    @Override
     public boolean freeze(Long userId) {
         return lambdaUpdate().set(User::getUserId,userId).set(User::getStatus, YesNoEnum.NO.getVal()).update();
     }

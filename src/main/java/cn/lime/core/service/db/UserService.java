@@ -44,6 +44,7 @@ public interface UserService extends IService<User> {
 
     List<User> list(Integer current, Integer pageSize,String sortOrder,String sortField);
 
+    UserVo detail(Long userId);
     boolean freeze(Long userId);
     boolean unfreeze(Long userId);
 }

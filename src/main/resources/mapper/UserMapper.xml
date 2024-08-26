@@ -76,4 +76,24 @@
             and u.status = #{userState}
         </if>
     </select>
+    <select id="detail" resultType="cn.lime.core.module.vo.UserVo">
+        select u.user_id,
+               u.account,
+               u.name,
+               u.avatar,
+               u.phone,
+               u.role,
+               u.email,
+               u.sex,
+               UNIX_TIMESTAMP(u.birthday) as birthday,
+               u.birthplace,
+               u.status
+                ,UNIX_TIMESTAMP(u.gmt_created) as gmt_created,
+               MAX(ll.login_time) AS last_login_time from User u
+                                                              left join Login_Log ll on
+            ll.user_id = u.user_id
+        group by u.user_id,u.name,u.account,u.phone,u.gmt_created,u.status
+        having u.user_id=#{userId}
+        limit 1
+    </select>
 </mapper>
