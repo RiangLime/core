@@ -3,17 +3,17 @@
 ---
 
 ### Intro
-provide base infrastructure with limited abilities.
-Biz modules can use this core module in pom and get started easily with proper configs.
+core模块为业务提供了基础服务,业务模块可以引用core来快速搭建服务
 
 ---
 
 ### Configs
 
-To get started, u need to set configurations below properly in yaml which in biz module. 
-All params defined in CoreParams.java
+你需要配置一些配置项来快速使用
 ```yaml
-base.snowflake.
+-- 用户账号密码登录密码加解密
+core.aes.key
+core.aes.iv
 ```
 
 
@@ -42,9 +42,54 @@ With basic double token check (access-token realized by jwt - which is easier, a
 
 ---
 
-#### 4. Shop
+#### 4. AI
 
-This part provides the ability of paying. Admins can define products by themselves and users can pay through third platform like wechat, alipay, firebase ...
-But need to pay attention to if configs are defined properly.
+如果需要使用chatGPT,你需要配置URL和api-key.此项为可选项,不影响最基本功能的使用
+```yaml
+core.openai.url
+core.openai.api-key
+```
 
----
+#### 5. OCR服务
+
+如果需要使用OCR服务,目前对接了阿里云的OCR服务,需要配置阿里云相关配置来使用OCR服务.此项为可选项,不影响最基本功能的使用
+```yaml
+core.ocr.ali.access-id
+core.ocr.ali.secret-id
+core.ocr.ali.endpoint
+```
+
+#### 6. OSS服务
+
+如果需要使用OCR服务,目前对接了七牛的OCR服务,需要配置七牛相关配置来使用OSS服务.此项为可选项,不影响最基本功能的使用
+```yaml
+core.oss.qiniu.token-expire
+core.oss.qiniu.access-id
+core.oss.qiniu.secret-id
+```
+
+#### 7. 短信服务
+
+如果需要使用短信服务,目前对接了阿里云的短信服务,需要配置阿里云相关配置来使用此服务.此项为可选项,不影响最基本功能的使用
+```yaml
+core.sms.ali.access-id
+core.sms.ali.secret-id
+core.sms.ali.endpoint
+core.sms.ali.template-id
+core.sms.ali.sign
+```
+
+#### 8. 微信第三方登录
+
+如果需要使用微信第三方登录(小程序或H5),将需要配置对应的appId和secretId.此项为可选项,不影响最基本功能的使用
+```yaml
+core.wx.mp.app-id
+core.wx.mp.secret-id
+core.wx.h5.app-id
+core.wx.h5.secret-id
+```
+
+#### 9. 多媒体服务器
+
+暂不提供服务
+
