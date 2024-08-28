@@ -50,6 +50,8 @@ core.openai.url
 core.openai.api-key
 ```
 
+---
+
 #### 5. OCR服务
 
 如果需要使用OCR服务,目前对接了阿里云的OCR服务,需要配置阿里云相关配置来使用OCR服务.此项为可选项,不影响最基本功能的使用
@@ -59,6 +61,8 @@ core.ocr.ali.secret-id
 core.ocr.ali.endpoint
 ```
 
+---
+
 #### 6. OSS服务
 
 如果需要使用OCR服务,目前对接了七牛的OCR服务,需要配置七牛相关配置来使用OSS服务.此项为可选项,不影响最基本功能的使用
@@ -67,6 +71,8 @@ core.oss.qiniu.token-expire
 core.oss.qiniu.access-id
 core.oss.qiniu.secret-id
 ```
+
+---
 
 #### 7. 短信服务
 
@@ -79,6 +85,8 @@ core.sms.ali.template-id
 core.sms.ali.sign
 ```
 
+---
+
 #### 8. 微信第三方登录
 
 如果需要使用微信第三方登录(小程序或H5),将需要配置对应的appId和secretId.此项为可选项,不影响最基本功能的使用
@@ -88,6 +96,8 @@ core.wx.mp.secret-id
 core.wx.h5.app-id
 core.wx.h5.secret-id
 ```
+
+---
 
 #### 9. 多媒体服务器
 
