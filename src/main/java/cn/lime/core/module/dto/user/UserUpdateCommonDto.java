@@ -39,13 +39,4 @@ public class UserUpdateCommonDto implements Serializable {
 
     @Schema(description = "出生籍贯")
     private String birthplace;
-
-    @Schema(description = "学历")
-    private String degree;
-
-    @Schema(description = "毕业院校")
-    private String graduateSchool;
-
-    @Schema(description = "年级")
-    private String grade;
 }

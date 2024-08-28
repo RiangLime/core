@@ -46,7 +46,7 @@
     <select id="pageWithoutMall" resultType="cn.lime.core.module.vo.UserVo">
         select u.user_id,
         u.account,
-        u.name,
+        u.name as nickName,
         u.avatar,
         u.phone,
         u.role,
@@ -55,8 +55,8 @@
         UNIX_TIMESTAMP(u.birthday) as birthday,
         u.birthplace,
         u.status
-        ,UNIX_TIMESTAMP(u.gmt_created) as gmt_created,
-        MAX(ll.login_time) AS last_login_time from User u
+        ,UNIX_TIMESTAMP(u.gmt_created) as registerTime,
+        MAX(ll.login_time/1000) AS last_login_time from User u
         left join Login_Log ll on
         ll.user_id = u.user_id
         group by u.user_id,u.name,u.account,u.phone,u.gmt_created,u.status
@@ -79,7 +79,7 @@
     <select id="detail" resultType="cn.lime.core.module.vo.UserVo">
         select u.user_id,
                u.account,
-               u.name,
+               u.name as nickname,
                u.avatar,
                u.phone,
                u.role,
@@ -88,8 +88,8 @@
                UNIX_TIMESTAMP(u.birthday) as birthday,
                u.birthplace,
                u.status
-                ,UNIX_TIMESTAMP(u.gmt_created) as gmt_created,
-               MAX(ll.login_time) AS last_login_time from User u
+                ,UNIX_TIMESTAMP(u.gmt_created) as registerTime,
+               MAX(ll.login_time/1000) AS last_login_time from User u
                                                               left join Login_Log ll on
             ll.user_id = u.user_id
         group by u.user_id,u.name,u.account,u.phone,u.gmt_created,u.status

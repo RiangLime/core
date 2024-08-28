@@ -50,6 +50,8 @@ create table UserThirdAuthorization
     gmt_created      TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间',
     gmt_modified     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) comment '用户第三方登录授权表' collate = utf8mb4_unicode_ci;
+ALTER TABLE UserThirdAuthorization ADD CONSTRAINT fk_user_id
+    FOREIGN KEY (personnel_id) REFERENCES User (user_id) on delete cascade;
 
 -- 昵称生成表
 create table NickNameRepo
