@@ -1,6 +1,8 @@
 package cn.lime.core.common;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,12 +29,16 @@ public class PageRequest implements Serializable {
      * 当前页号
      */
     @Schema(description = "当前页号")
+    @Min(value = 1,message = "current最小值为1")
+    @NotNull(message = "current不可为空")
     private Integer current = 1;
 
     /**
      * 页面大小
      */
     @Schema(description = "页面大小")
+    @Min(value = 1,message = "pageSize最小值为1")
+    @NotNull(message = "pageSize不可为空")
     private Integer pageSize = 10;
 
     /**
