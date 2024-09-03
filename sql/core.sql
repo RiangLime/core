@@ -50,8 +50,9 @@ create table UserThirdAuthorization
     gmt_created      TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间',
     gmt_modified     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) comment '用户第三方登录授权表' collate = utf8mb4_unicode_ci;
-ALTER TABLE UserThirdAuthorization ADD CONSTRAINT fk_user_id
-    FOREIGN KEY (personnel_id) REFERENCES User (user_id) on delete cascade;
+ALTER TABLE UserThirdAuthorization
+    ADD CONSTRAINT fk_user_id
+        FOREIGN KEY (personnel_id) REFERENCES User (user_id) on delete cascade;
 
 -- 昵称生成表
 create table NickNameRepo
@@ -60,3 +61,20 @@ create table NickNameRepo
     type    int                            not null comment '单词类型',
     content nvarchar(128)                  not null comment '单词内容'
 ) comment '昵称工具表' collate = utf8mb4_unicode_ci;
+
+create table Local_Media
+(
+    id          bigint primary key not null comment 'id',
+    url         nvarchar(512)      not null comment '多媒体URL',
+    url_tag_id  bigint             null comment '多媒体标签',
+    gmt_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'
+) comment '本地多媒体文件表' collate = utf8mb4_unicode_ci;
+
+create table Local_Media_Tag
+(
+    id          bigint primary key not null comment 'id',
+    tag_name    nvarchar(255)      not null comment '本地多媒体文件标签名',
+    gmt_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'
+) comment '本地多媒体文件标签表' collate = utf8mb4_unicode_ci;
+
+INSERT INTO Local_Media_Tag (id, tag_name) VALUES(1, '未分组');
