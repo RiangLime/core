@@ -1,5 +1,6 @@
 package cn.lime.core.loader;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class RedisConfigLoader {
     private int port;
 
     //redis密码
-    @Value("${spring.data.redis.password}")
+    @Value("${spring.data.redis.password:}")
     private String password;
 
     //默认数据库
@@ -60,7 +61,9 @@ public class RedisConfigLoader {
         server.setHostName(host); // 指定地址
         server.setDatabase(db); // 指定数据库
         server.setPort(port); //指定端口
-        server.setPassword(RedisPassword.of(password)); //指定密码
+        if (StringUtils.isNotEmpty(password)) {
+            server.setPassword(RedisPassword.of(password)); //指定密码
+        }
         LettuceConnectionFactory factory = new LettuceConnectionFactory(server);
         factory.afterPropertiesSet(); //刷新配置
         return factory;
