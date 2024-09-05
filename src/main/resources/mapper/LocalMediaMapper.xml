@@ -20,6 +20,8 @@
         SELECT lm.id as urlId, lm.url, lmt.tag_name as tagName
         FROM Local_Media_Tag lmt
                  left join Local_Media lm on lmt.id = lm.url_tag_id
-        WHERE lmt.id = #{tagId}
+        <if test="tagId != null">
+            WHERE lmt.id = #{tagId}
+        </if>
     </select>
 </mapper>

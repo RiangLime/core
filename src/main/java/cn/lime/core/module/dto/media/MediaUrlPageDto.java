@@ -18,6 +18,5 @@ import lombok.EqualsAndHashCode;
 public class MediaUrlPageDto extends PageRequest {
     @Schema(description = "URL标签ID 默认标签未分组为1 String ")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @NotNull(message = "多媒体标签ID不可为空")
-    private Long tagId = 1L;
+    private Long tagId;
 }
