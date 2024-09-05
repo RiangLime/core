@@ -36,6 +36,7 @@ public class FileStorageService implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         initSuccess = initSuccess();
         if (initSuccess) {
+            log.info("path: {}",coreParams.getFileStoragePath());
             File storageDir = new File(coreParams.getFileStoragePath());
             if (!storageDir.exists()) {
                 if (!storageDir.mkdirs()) {
@@ -68,7 +69,7 @@ public class FileStorageService implements InitializingBean {
             while (localFile.exists()) {
                 // 生成带序号的新文件名
                 String newFileName = baseName + "_" + counter + extension;
-                localFile = new File(newFileName);
+                localFile = new File(coreParams.getFileStoragePath() + File.separator + newFileName);
                 counter++;
             }
         }

@@ -58,7 +58,7 @@ public class FileStorageController {
     @Operation(summary = "上传文件接口")
     @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.ADMIN)
     @Transactional
-    public BaseResponse<Void> handleFileUpload(@NotNull@RequestParam("file") MultipartFile file,
+    public BaseResponse<Void> handleFileUpload(@NotNull @RequestParam("file") MultipartFile file,
                                                @NotNull @RequestParam("tagId")String tagId) {
         Long tag = Long.parseLong(tagId);
         String url = fileStorageService.uploadFile(file);

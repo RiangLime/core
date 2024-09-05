@@ -85,9 +85,9 @@ public class CoreParams {
     private String accessTokenEncodeKey;
 
     // file storage
-    @Value("${core.file-storage.path:}")
+    @Value("${core.file-storage.path:/home/ubuntu/uploads}")
     private String fileStoragePath;
-    @Value("${core.file-storage.prefix:}")
+    @Value("${core.file-storage.prefix:https://java.shop.ceagull.top/upload}")
     private String fileStorageUrlPrefix;
 
 }
