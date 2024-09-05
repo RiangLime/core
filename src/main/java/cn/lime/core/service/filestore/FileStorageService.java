@@ -55,25 +55,36 @@ public class FileStorageService implements InitializingBean {
 
     public String uploadFile(MultipartFile file) {
         ThrowUtils.throwIf(!initSuccess, ErrorCode.INIT_FAIL, "多媒体服务器初始化失败");
-        String originalFilename = file.getOriginalFilename();
-        ThrowUtils.throwIf(originalFilename.contains(".."),
-                ErrorCode.PARAMS_ERROR, "Invalid file path sequence " + originalFilename);
-        String suffix = originalFilename.split("\\.")[1];
-        String fileName = UUID.randomUUID().toString().replaceAll("-", "") + "." + suffix;
-        File localFile = new File(coreParams.getFileStoragePath() + File.separator + fileName);
+        String originalFileName = file.getOriginalFilename();
+        ThrowUtils.throwIf(StringUtils.isEmpty(originalFileName), ErrorCode.PARAMS_ERROR, "文件名为空");
+        File localFile = new File(coreParams.getFileStoragePath() + File.separator + originalFileName);
+        // 获取文件的基本名称和扩展名
+        String baseName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        if (localFile.exists()) {
+            // 从1 开始依次检查文件名
+            int counter = 1;
+            // 循环检查文件是否存在
+            while (localFile.exists()) {
+                // 生成带序号的新文件名
+                String newFileName = baseName + "_" + counter + extension;
+                localFile = new File(newFileName);
+                counter++;
+            }
+        }
         try (FileOutputStream fos = new FileOutputStream(localFile)) {
             fos.write(file.getBytes());
-        }catch (IOException e){
-            throw new BusinessException(ErrorCode.IO_ERROR,"文件落盘异常");
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.IO_ERROR, "文件落盘异常");
         }
-        return localFile.getAbsolutePath().replace(coreParams.getFileStoragePath(),coreParams.getFileStorageUrlPrefix());
+        return localFile.getAbsolutePath().replace(coreParams.getFileStoragePath(), coreParams.getFileStorageUrlPrefix());
     }
 
-    public void deleteFile(String url){
+    public void deleteFile(String url) {
         ThrowUtils.throwIf(!initSuccess, ErrorCode.INIT_FAIL, "多媒体服务器初始化失败");
-        String realFilePath = url.replace(coreParams.getFileStorageUrlPrefix(),coreParams.getFileStoragePath());
+        String realFilePath = url.replace(coreParams.getFileStorageUrlPrefix(), coreParams.getFileStoragePath());
         File realFile = new File(realFilePath);
-        if (realFile.exists()){
+        if (realFile.exists()) {
             FileUtils.deleteQuietly(realFile);
         }
     }
