@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.JdbcType;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 用户第三方登录授权表
@@ -60,13 +61,13 @@ public class Userthirdauthorization implements Serializable {
      * 创建时间
      */
     @TableField(value = "gmt_created")
-    private Long gmtCreated;
+    private Date gmtCreated;
 
     /**
      * 更新时间
      */
     @TableField(value = "gmt_modified")
-    private Long gmtModified;
+    private Date gmtModified;
 
     private static final long serialVersionUID = 1L;
 

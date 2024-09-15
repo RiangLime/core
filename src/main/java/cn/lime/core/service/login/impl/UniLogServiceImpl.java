@@ -28,6 +28,7 @@ import cn.lime.core.snowflake.SnowFlakeGenerator;
 import cn.lime.core.threadlocal.ReqThreadLocal;
 import cn.lime.core.token.AccessTokenHandler;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +47,7 @@ import java.util.*;
  * @Date: 2023/12/11 13:40
  */
 @Service
+@Slf4j
 public class UniLogServiceImpl implements UniLogService {
 
     @Resource
@@ -115,8 +117,9 @@ public class UniLogServiceImpl implements UniLogService {
         } else {
             throw new BusinessException(ErrorCode.UNSUPPORTED_METHOD, "平台标志异常,仅可为1或2");
         }
-        ThrowUtils.throwIf(StringUtils.isEmpty(openId) || StringUtils.isEmpty(unionId), ErrorCode.WX_OPENID_INTERFACE_ERROR, "获取OpenID失败");
-
+        log.info("openid:{} unionId:{}",openId,unionId);
+        ThrowUtils.throwIf(StringUtils.isEmpty(openId) && StringUtils.isEmpty(unionId), ErrorCode.WX_OPENID_INTERFACE_ERROR, "获取OpenID失败");
+        if (StringUtils.isEmpty(unionId)) unionId=openId;
         User personnel = null;
         boolean userExistFlag = userthirdauthorizationService
                 .lambdaQuery()

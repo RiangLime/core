@@ -3,6 +3,7 @@ package cn.lime.core.aop;
 import cn.lime.core.annotation.AuthCheck;
 import cn.lime.core.common.ErrorCode;
 import cn.lime.core.common.ThrowUtils;
+import cn.lime.core.constant.AuthLevel;
 import cn.lime.core.module.vo.TokenCheckVo;
 import cn.lime.core.service.login.UniLogService;
 import cn.lime.core.threadlocal.ReqInfo;
@@ -55,7 +56,7 @@ public class AuthInterceptor {
         // 请求头校验
         checkHead(request, authCheck, userThreadLocalBean);
         // TOKEN校验
-        if (authCheck.needToken()) {
+        if (authCheck.needToken()&& authCheck.authLevel().getVal() > AuthLevel.TOURIST.getVal()) {
             TokenCheckVo vo = uniLogService.checkJwtAccessToken(request.getHeader(TOKEN_HEADER));
             userThreadLocalBean.setUserId(vo.getUserId());
             userThreadLocalBean.setAuthLevel(vo.getAuthLevel());
@@ -76,7 +77,7 @@ public class AuthInterceptor {
      */
     private void checkHead(HttpServletRequest request, AuthCheck authCheck, ReqInfo userThreadLocalBean) {
         // 校验TOKEN头
-        if (authCheck.needToken()) {
+        if (authCheck.needToken() && authCheck.authLevel().getVal() > AuthLevel.TOURIST.getVal()) {
             String token = request.getHeader(TOKEN_HEADER);
             ThrowUtils.throwIf(StringUtils.isEmpty(token), ErrorCode.PARAMS_ERROR, "该接口需携带token");
             userThreadLocalBean.setToken(token);

@@ -70,7 +70,7 @@ public class AccessTokenHandler {
                 //设置用户id
                 .withClaim("userId", user.getUserId())
 //                .withClaim("auth", JSON.toJSONString(authInfoArr))
-                .withClaim("authLevel",authLevel)
+                .withClaim("authLevel",ObjectUtils.isEmpty(authLevel)?AuthLevel.USER.getVal():authLevel)
                 .withClaim("vipLevel",vipLevel)
                 //token失效时间，3小时失效
                 .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpire))

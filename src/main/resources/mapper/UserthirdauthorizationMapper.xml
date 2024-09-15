@@ -11,8 +11,8 @@
             <result property="thirdType" column="third_type" jdbcType="INTEGER"/>
             <result property="thirdFirstTag" column="third_first_tag" jdbcType="VARCHAR"/>
             <result property="thirdSecondTag" column="third_second_tag" jdbcType="VARCHAR"/>
-            <result property="gmtCreated" column="gmt_created" jdbcType="VARCHAR"/>
-            <result property="gmtModified" column="gmt_modified" jdbcType="VARCHAR"/>
+            <result property="gmtCreated" column="gmt_created" jdbcType="TIMESTAMP"/>
+            <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
