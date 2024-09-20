@@ -77,4 +77,10 @@ create table Local_Media_Tag
     gmt_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'
 ) comment '本地多媒体文件标签表' collate = utf8mb4_unicode_ci;
 
-INSERT INTO Local_Media_Tag (id, tag_name) VALUES(1, '未分组');
+create table System_Log
+(
+    id          bigint primary key not null comment 'id',
+    interface   nvarchar(512)      not null comment '接口名',
+    token       nvarchar(256)      null comment 'token',
+    gmt_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'
+)comment '系统调用日志' collate = utf8mb4_unicode_ci;

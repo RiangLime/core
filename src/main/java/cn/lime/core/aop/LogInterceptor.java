@@ -1,8 +1,10 @@
 package cn.lime.core.aop;
 
 
+import cn.lime.core.service.SystemLogService;
 import cn.lime.core.threadlocal.ReqInfo;
 import cn.lime.core.threadlocal.ReqThreadLocal;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -17,6 +19,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.UUID;
 
+import static cn.lime.core.aop.AuthInterceptor.TOKEN_HEADER;
+
 /**
  * @ClassName: LogInterceptor
  * @Description: 日志
@@ -29,6 +33,8 @@ import java.util.UUID;
 @Order(1)
 public class LogInterceptor {
 
+    @Resource
+    private SystemLogService service;
 
     /**
      * 切点
@@ -71,6 +77,7 @@ public class LogInterceptor {
                 params = args[0].toString();
             }
         }
+        service.add(methodName,request.getHeader(TOKEN_HEADER));
         //打印日志
         log.info("ReqId:[{}] IP[{}]\tMETHOD[{}]\tURL[{}]\tPARAMS[{}]",
                 ReqThreadLocal.getInfo().getUuid(), ip, className + "." + methodName, url, params);

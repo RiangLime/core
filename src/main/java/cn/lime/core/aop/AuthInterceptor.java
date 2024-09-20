@@ -36,7 +36,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Order(3)
 public class AuthInterceptor {
 
-    private static final String TOKEN_HEADER = "Authorization";
+    public static final String TOKEN_HEADER = "Authorization";
     private static final String PLATFORM_HEADER = "Platform";
 
     @Resource
