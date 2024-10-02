@@ -10,7 +10,7 @@ public enum RedisDb {
 
     TOKEN(1),
     VERIFICATION(2),
-    PAYMENT_EXPIRE_DB(4),
+    PAYMENT_EXPIRE_DB(3),
     WX_ACCESS_TOKEN(5),
     BIZ_DB(10)
     ;

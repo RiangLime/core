@@ -36,7 +36,7 @@ public class FileStorageService implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         initSuccess = initSuccess();
         if (initSuccess) {
-            log.info("path: {}",coreParams.getFileStoragePath());
+            log.info("path: {}", coreParams.getFileStoragePath());
             File storageDir = new File(coreParams.getFileStoragePath());
             if (!storageDir.exists()) {
                 if (!storageDir.mkdirs()) {
@@ -55,10 +55,20 @@ public class FileStorageService implements InitializingBean {
     }
 
     public String uploadFile(MultipartFile file) {
+        return upload(file, coreParams.getFileStoragePath(), coreParams.getFileStorageUrlPrefix());
+    }
+
+    public String uploadAvatar(MultipartFile file) {
+        ThrowUtils.throwIf(file.getSize() > coreParams.getAvatarMaxSizeKB() * 1024,
+                ErrorCode.PARAMS_ERROR, "头像过大，最多为" + coreParams.getAvatarMaxSizeKB() + "KB");
+        return upload(file, coreParams.getAvatarStoragePath(), coreParams.getAvatarStorageUrlPrefix());
+    }
+
+    private String upload(MultipartFile file, String filepath, String urlReplacePrefix) {
         ThrowUtils.throwIf(!initSuccess, ErrorCode.INIT_FAIL, "多媒体服务器初始化失败");
         String originalFileName = file.getOriginalFilename();
         ThrowUtils.throwIf(StringUtils.isEmpty(originalFileName), ErrorCode.PARAMS_ERROR, "文件名为空");
-        File localFile = new File(coreParams.getFileStoragePath() + File.separator + originalFileName);
+        File localFile = new File(filepath + File.separator + originalFileName);
         // 获取文件的基本名称和扩展名
         String baseName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
@@ -69,7 +79,7 @@ public class FileStorageService implements InitializingBean {
             while (localFile.exists()) {
                 // 生成带序号的新文件名
                 String newFileName = baseName + "_" + counter + extension;
-                localFile = new File(coreParams.getFileStoragePath() + File.separator + newFileName);
+                localFile = new File(filepath + File.separator + newFileName);
                 counter++;
             }
         }
@@ -78,7 +88,8 @@ public class FileStorageService implements InitializingBean {
         } catch (IOException e) {
             throw new BusinessException(ErrorCode.IO_ERROR, "文件落盘异常");
         }
-        return localFile.getAbsolutePath().replace(coreParams.getFileStoragePath(), coreParams.getFileStorageUrlPrefix());
+        return localFile.getAbsolutePath().replace(filepath, urlReplacePrefix);
+
     }
 
     public void deleteFile(String url) {

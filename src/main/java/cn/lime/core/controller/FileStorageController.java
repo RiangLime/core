@@ -4,6 +4,7 @@ import cn.lime.core.annotation.AuthCheck;
 import cn.lime.core.annotation.DtoCheck;
 import cn.lime.core.annotation.RequestLog;
 import cn.lime.core.common.BaseResponse;
+import cn.lime.core.common.BusinessException;
 import cn.lime.core.common.PageResult;
 import cn.lime.core.common.ResultUtils;
 import cn.lime.core.constant.AuthLevel;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,7 @@ import java.util.List;
 @Tag(name = "多媒体上传接口")
 @CrossOrigin(origins = "*")
 @RequestLog
+@Slf4j
 public class FileStorageController {
 
     @Resource
@@ -53,6 +56,13 @@ public class FileStorageController {
         String url = fileStorageService.uploadFile(file);
         return ResultUtils.success(url);
     }
+    @PostMapping("/uploadavatar")
+    @Operation(summary = "上传头像接口")
+    @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.USER)
+    public BaseResponse<String> handleAvatarUpload(@RequestParam("file") MultipartFile file) {
+        String url = fileStorageService.uploadAvatar(file);
+        return ResultUtils.success(url);
+    }
 
     @PostMapping("/uploadwithtag")
     @Operation(summary = "上传文件接口")
@@ -66,6 +76,7 @@ public class FileStorageController {
             localMediaService.addUrl(url,tag);
         }catch (Exception e){
             fileStorageService.deleteFile(url);
+            throw new RuntimeException(e);
         }
         return ResultUtils.success(null);
     }

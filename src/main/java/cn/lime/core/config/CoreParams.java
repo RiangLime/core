@@ -90,4 +90,12 @@ public class CoreParams {
     @Value("${core.file-storage.prefix:https://java.shop.ceagull.top/upload}")
     private String fileStorageUrlPrefix;
 
+    // file storage
+    @Value("${core.avatar-storage.path:/home/ubuntu/uploads_avatar}")
+    private String avatarStoragePath;
+    @Value("${core.avatar-storage.prefix:https://java.shop.ceagull.top/upload}")
+    private String avatarStorageUrlPrefix;
+    @Value("${core.avatar-storage.max-size-KB:500}")
+    private Integer avatarMaxSizeKB;
+
 }

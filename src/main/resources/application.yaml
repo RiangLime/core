@@ -1,0 +1,75 @@
+server:
+  port: 8093
+  servlet:
+    context-path: /anxin/v2
+  address: 0.0.0.0
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  application:
+    #    服务名
+    name: anxin
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${db_ip_port:127.0.0.1:3306}/anxin?serverTimezone=Asia/Shanghai&characterEncoding=utf-8
+    username: ${db_username:anxin}
+    password: ${db_pwd:cHfSXkdksEFD8jrT}
+  data:
+    redis:
+      host: ${redis_ip:127.0.0.1}
+      port: 6379
+      dbs: 0,1,2,3,4,5,6,7,8,9,10
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: cn.lime
+  default-flat-param-object: true
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    swagger-model-name: 实体类列表
+  production: ${PRODUCTION:false}
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+core:
+  file-storage:
+    path: ${upload_path:/www/wwwroot/java.shop.ceagull.top/public/upload}
+    prefix: ${upload_url_prefix:https://java.shop.ceagull.top/upload}
+  avatar-storage:
+    path: ${avatar_upload_path:/www/wwwroot/java.shop.ceagull.top/public/upload}
+    prefix: ${avatar_upload_url_prefix:https://java.shop.ceagull.top/upload}
+    max-size-KB: ${avatar_upload_max_size_kb:500}
+  wx:
+    mp:
+      app-id: ${mp_app_id:wxc449a89ac5cc9210}
+      secret-id: ${mp_secret_id:}
+mall:
+  pay:
+    wx:
+      merchant-id: ${wx_pay_merchant_id:}
+      private-key-path: ${wx_pay_private_key_path:}
+      merchant-serial-number: ${wx_pay_serial_number:}
+      api-v3-key: ${wx_pay_api_v3_key:}
+      app-id: ${wx_pay_appid:}
+      certificate-path: ${wx_pay_certificate_path:}
+      notice-url-prefix: ${wx_pay_notice_url_prefix:}
+
+
