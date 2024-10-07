@@ -33,6 +33,9 @@ public class SystemLog implements Serializable {
     @TableField(value = "token")
     private String token;
 
+    @TableField(value = "user_id")
+    private Long userId;
+
     /**
      * 创建时间
      */

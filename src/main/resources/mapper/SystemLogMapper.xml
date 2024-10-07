@@ -6,13 +6,14 @@
 
     <resultMap id="BaseResultMap" type="cn.lime.core.module.entity.SystemLog">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="interface" column="interface" jdbcType="VARCHAR"/>
+            <result property="interfaceName" column="interface" jdbcType="VARCHAR"/>
             <result property="token" column="token" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
             <result property="gmtCreated" column="gmt_created" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,interface,token,
+        id,interface,token,user_id
         gmt_created
     </sql>
 </mapper>

@@ -82,5 +82,6 @@ create table System_Log
     id          bigint primary key not null comment 'id',
     interface   nvarchar(512)      not null comment '接口名',
     token       nvarchar(256)      null comment 'token',
+    user_id     bigint             null comment '用户ID',
     gmt_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'
-)comment '系统调用日志' collate = utf8mb4_unicode_ci;
+) comment '系统调用日志' collate = utf8mb4_unicode_ci;

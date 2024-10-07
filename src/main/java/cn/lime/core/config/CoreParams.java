@@ -68,6 +68,8 @@ public class CoreParams {
     private String wxMpAuthUserInfoUrl;
     @Value("${core.wx-auth.mp.phone-url:https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=%s}")
     private String wxMpAuthMobileUrl;
+    @Value("${core.wx-auth.mp.share-qrcode-url:https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=%s}")
+    private String wxMpUnlimitedQRCodeUrl;
 
     @Value("${core.wx.mp.app-id:}")
     private String wxMpAppId;

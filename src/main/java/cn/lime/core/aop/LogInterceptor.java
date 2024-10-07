@@ -1,7 +1,7 @@
 package cn.lime.core.aop;
 
 
-import cn.lime.core.service.SystemLogService;
+import cn.lime.core.service.db.SystemLogService;
 import cn.lime.core.threadlocal.ReqInfo;
 import cn.lime.core.threadlocal.ReqThreadLocal;
 import jakarta.annotation.Resource;

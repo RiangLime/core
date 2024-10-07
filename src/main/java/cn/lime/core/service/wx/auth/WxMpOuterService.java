@@ -12,18 +12,20 @@ import cn.lime.core.service.wx.bean.WxPhoneInfo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ import java.util.Map;
  * @Date: 2023/10/17 16:21
  */
 @Service
+@Slf4j
 public class WxMpOuterService {
 
     @Resource
@@ -106,6 +109,51 @@ public class WxMpOuterService {
         String getResult = HttpUtil.get(coreParams.getWxMpAuthTokenUrl(), paramMap);
         redisTemplateMap.get(RedisDb.WX_ACCESS_TOKEN.getVal()).opsForValue().set(appId + secretId, getResult, Duration.ofSeconds(7000));
         return JSON.parseObject(getResult, AccessTokenInfo.class);
+    }
+
+    public String getShareCode(String appId,String secretId, String page,String scene){
+        return getShareCode(appId,secretId,page,scene,true,"release");
+    }
+
+    public String getShareCode(String appId,String secretId, String page,String scene,Boolean checkPath,String env){
+        AccessTokenInfo token = getAccessToken(appId, secretId);
+        String url = String.format(coreParams.getWxMpUnlimitedQRCodeUrl(), token.getAccessToken());
+
+        JSONObject param = new JSONObject();
+        param.put("page", page);
+        param.put("scene",scene);
+        param.put("check_path",checkPath);
+        param.put("env_version",env);
+        //添加token
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json;charset=UTF-8");
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+        //封装请求头
+        org.springframework.http.HttpEntity<String> formEntity =
+                new org.springframework.http.HttpEntity<>(JSON.toJSONString(param), headers);
+
+        ResponseEntity<byte[]> response2 = restTemplate.exchange(url, HttpMethod.POST,formEntity, byte[].class);
+        HttpHeaders rspHeaders = response2.getHeaders();
+        String rspContentType = rspHeaders.getContentType().toString();
+
+        if (rspContentType.equals("image/jpeg")) {
+            // 处理JPEG图片响应
+            byte[] responseBody = response2.getBody();
+            return Base64.getEncoder().encodeToString(responseBody);
+        }else {
+            String jsonString = new String(response2.getBody(), StandardCharsets.UTF_8);
+            JSONObject jsonObject = JSONObject.parseObject(jsonString);
+            log.info("code:" + (Integer) jsonObject.get("errcode"));
+
+            // accessToken过期
+            if ((Integer) jsonObject.get("errcode") == 40001){
+                redisTemplateMap.get(RedisDb.WX_ACCESS_TOKEN.getVal()).opsForValue().getAndDelete(appId + secretId);
+                throw new BusinessException(ErrorCode.WX_PHONE_INTERFACE_ERROR, "accessToken已过期,"+jsonObject.get("errmsg").toString());
+            }else {
+                throw new BusinessException(ErrorCode.WX_PHONE_INTERFACE_ERROR, jsonObject.get("errmsg").toString());
+            }
+        }
     }
 
 
