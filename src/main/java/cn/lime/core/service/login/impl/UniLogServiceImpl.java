@@ -129,7 +129,7 @@ public class UniLogServiceImpl implements UniLogService {
             // 以前注册过的用户ID
             personnel = userService.getById(userthirdauthorizationService
                     .lambdaQuery()
-                    .eq(Userthirdauthorization::getThirdFirstTag, unionId).one().getPersonnelId());
+                    .eq(Userthirdauthorization::getThirdFirstTag, unionId).list().get(0).getPersonnelId());
             ThrowUtils.throwIf(ObjectUtils.isEmpty(personnel), ErrorCode.NOT_FOUND_ERROR, "无法根据微信UNION_ID查询到该用户信息");
             // 新的OPENID不存在,需要插入
             if (!userthirdauthorizationService
