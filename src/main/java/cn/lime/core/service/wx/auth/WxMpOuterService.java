@@ -111,19 +111,19 @@ public class WxMpOuterService {
         return JSON.parseObject(getResult, AccessTokenInfo.class);
     }
 
-    public String getShareCode(String appId,String secretId, String page,String scene){
-        return getShareCode(appId,secretId,page,scene,true,"release");
+    public String getShareCode(String appId, String secretId, String page, String scene) {
+        return getShareCode(appId, secretId, page, scene, true, "release");
     }
 
-    public String getShareCode(String appId,String secretId, String page,String scene,Boolean checkPath,String env){
+    public String getShareCode(String appId, String secretId, String page, String scene, Boolean checkPath, String env) {
         AccessTokenInfo token = getAccessToken(appId, secretId);
         String url = String.format(coreParams.getWxMpUnlimitedQRCodeUrl(), token.getAccessToken());
 
         JSONObject param = new JSONObject();
         param.put("page", page);
-        param.put("scene",scene);
-        param.put("check_path",checkPath);
-        param.put("env_version",env);
+        param.put("scene", scene);
+        param.put("check_path", checkPath);
+        param.put("env_version", env);
         //添加token
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=UTF-8");
@@ -133,7 +133,7 @@ public class WxMpOuterService {
         org.springframework.http.HttpEntity<String> formEntity =
                 new org.springframework.http.HttpEntity<>(JSON.toJSONString(param), headers);
 
-        ResponseEntity<byte[]> response2 = restTemplate.exchange(url, HttpMethod.POST,formEntity, byte[].class);
+        ResponseEntity<byte[]> response2 = restTemplate.exchange(url, HttpMethod.POST, formEntity, byte[].class);
         HttpHeaders rspHeaders = response2.getHeaders();
         String rspContentType = rspHeaders.getContentType().toString();
 
@@ -141,20 +141,55 @@ public class WxMpOuterService {
             // 处理JPEG图片响应
             byte[] responseBody = response2.getBody();
             return Base64.getEncoder().encodeToString(responseBody);
-        }else {
+        } else {
             String jsonString = new String(response2.getBody(), StandardCharsets.UTF_8);
             JSONObject jsonObject = JSONObject.parseObject(jsonString);
             log.info("code:" + (Integer) jsonObject.get("errcode"));
 
             // accessToken过期
-            if ((Integer) jsonObject.get("errcode") == 40001){
+            if ((Integer) jsonObject.get("errcode") == 40001) {
                 redisTemplateMap.get(RedisDb.WX_ACCESS_TOKEN.getVal()).opsForValue().getAndDelete(appId + secretId);
-                throw new BusinessException(ErrorCode.WX_PHONE_INTERFACE_ERROR, "accessToken已过期,"+jsonObject.get("errmsg").toString());
-            }else {
+                throw new BusinessException(ErrorCode.WX_PHONE_INTERFACE_ERROR, "accessToken已过期," + jsonObject.get("errmsg").toString());
+            } else {
                 throw new BusinessException(ErrorCode.WX_PHONE_INTERFACE_ERROR, jsonObject.get("errmsg").toString());
             }
         }
     }
 
+    public void sendMessageToUser(String appId, String secretId, String templateId, String page, String openId, JSONObject jsonObj) {
+        sendMessageToUser(appId,secretId,templateId,page,openId,jsonObj,"formal","zh_CN");
+    }
+
+    public void sendMessageToUser(String appId, String secretId, String templateId, String page, String openId, JSONObject jsonObj, String env) {
+        sendMessageToUser(appId,secretId,templateId,page,openId,jsonObj,env,"zh_CN");
+    }
+
+
+    public void sendMessageToUser(String appId, String secretId, String templateId, String page, String openId, JSONObject jsonObj,String mpState, String lang) {
+        AccessTokenInfo token = getAccessToken(appId, secretId);
+        String url = String.format(coreParams.getWxMpSendMessageUrl(), token.getAccessToken());
+
+
+        JSONObject param = new JSONObject();
+        param.put("template_id", templateId);
+        param.put("page", page);
+        param.put("touser", openId);
+        param.put("data", jsonObj);
+        log.info("[SEND USER] param: {}",param.toJSONString());
+        //添加token
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json;charset=UTF-8");
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+        //封装请求头
+        org.springframework.http.HttpEntity<String> formEntity =
+                new org.springframework.http.HttpEntity<>(JSON.toJSONString(param), headers);
+
+        ResponseEntity<JSONObject> response2 = restTemplate.postForEntity(url, formEntity, JSONObject.class);
+        System.out.println(response2.getBody());
+        JSONObject respJson = JSON.parseObject(String.valueOf(response2.getBody()));
+        ThrowUtils.throwIf((Integer) respJson.get("errcode") != 0,
+                ErrorCode.WX_PHONE_INTERFACE_ERROR, respJson.get("errmsg").toString());
+    }
 
 }

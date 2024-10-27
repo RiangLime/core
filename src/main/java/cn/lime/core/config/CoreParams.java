@@ -70,6 +70,14 @@ public class CoreParams {
     private String wxMpAuthMobileUrl;
     @Value("${core.wx-auth.mp.share-qrcode-url:https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=%s}")
     private String wxMpUnlimitedQRCodeUrl;
+    @Value("${core.wx-auth.mp.send-message-url:https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s}")
+    private String wxMpSendMessageUrl;
+    @Value("${core.wx-auth.mp.send-message-template-id:DIevvAANm4WOiBI8iS3I8fsEMf0oGk6yP51JBqzG0Zg}")
+    private String wxMpSendMessageTemplateId;
+    @Value("${core.wx-auth.mp.send-message-page:pages/report/bind1step/index?code=}")
+    private String wxMpSendMessagePage;
+    @Value("${core.wx-auth.mp.send-message-env:formal}")
+    private String wxMpSendMessageEnv;
 
     @Value("${core.wx.mp.app-id:}")
     private String wxMpAppId;
