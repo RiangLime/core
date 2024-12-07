@@ -123,7 +123,7 @@ public class UniLogServiceImpl implements UniLogService {
         User personnel = null;
         boolean userExistFlag = userthirdauthorizationService
                 .lambdaQuery()
-                .eq(Userthirdauthorization::getThirdFirstTag, unionId).exists();
+                .eq(Userthirdauthorization::getThirdSecondTag, openId).exists();
         // 用户存在 进行登录
         if (userExistFlag) {
             // 以前注册过的用户ID
@@ -157,7 +157,7 @@ public class UniLogServiceImpl implements UniLogService {
         // 登录
         LoginVo loginVo = generateToken(personnel, platform, ReqThreadLocal.getInfo().getIp());
         loginVo.setIsBindPhone(StringUtils.isNotEmpty(personnel.getPhone()));
-        loginVo.setIsNew(userExistFlag);
+        loginVo.setIsNew(!userExistFlag);
         return loginVo;
     }
 
