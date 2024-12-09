@@ -36,7 +36,7 @@ public final class PageResult<T> {
         }
 
         this.current = (int) page.getCurrent();
-        this.total = data.size();
+        this.total = Math.toIntExact(page.getTotal());
         this.size = (int) page.getSize();
         this.pages = total / size + 1;
     }
