@@ -1,5 +1,6 @@
 package cn.lime.core.controller.admin;
 
+import cn.lime.core.annotation.ApiLimit;
 import cn.lime.core.annotation.AuthCheck;
 import cn.lime.core.annotation.DtoCheck;
 import cn.lime.core.annotation.RequestLog;
@@ -40,9 +41,10 @@ public class AdminUserController {
     @Operation(summary = "用户分页查询")
 //    @AuthCheck(needToken = true,needPlatform = true)
     @DtoCheck(checkBindResult = true)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<PageResult<UserVo>> page(@Valid @RequestBody UserPageDto dto, BindingResult result) {
-        return ResultUtils.success(userService.page(dto.getQueryField(),dto.getRegisterStart(),dto.getRegisterEnd(),
-                dto.getUserState(),dto.getUserVipLevel(),dto.getCurrent(),dto.getPageSize(),dto.getSortOrder(),
+        return ResultUtils.success(userService.page(dto.getQueryField(), dto.getRegisterStart(), dto.getRegisterEnd(),
+                dto.getUserState(), dto.getUserVipLevel(), dto.getCurrent(), dto.getPageSize(), dto.getSortOrder(),
                 dto.getSortField()));
     }
 }

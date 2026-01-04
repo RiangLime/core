@@ -25,6 +25,8 @@ public class ReqInfo {
 
     private String ip;
 
+    private String uri;
+
     private int authLevel;
 
     private int vipLevel;

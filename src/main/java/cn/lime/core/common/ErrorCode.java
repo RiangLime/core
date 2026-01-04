@@ -132,6 +132,7 @@ public enum ErrorCode {
     UUID_INVALID(40311, "uuid无效"),
     SYSTEM_ERROR(50000, "系统内部异常"),
     OPERATION_ERROR(50001, "操作失败"),
+    API_LIMIT_EXCEED(50002,"API调用过快"),
 
     IO_ERROR(50020,"系统IO错误");
 
