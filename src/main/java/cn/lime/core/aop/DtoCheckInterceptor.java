@@ -2,6 +2,8 @@ package cn.lime.core.aop;
 
 import cn.lime.core.annotation.DtoCheck;
 import cn.lime.core.common.ThrowUtils;
+import cn.lime.core.common.dto.BaseCheckDto;
+import cn.lime.core.common.dto.PageRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -26,7 +28,10 @@ public class DtoCheckInterceptor {
     @Transactional
     public void doInterceptor(JoinPoint joinPoint, DtoCheck dtoCheck) {
         Object[] args = joinPoint.getArgs();
-        BindingResult result = (BindingResult) args[1];
-        ThrowUtils.checkRequestValid(result);
+        for (Object arg : args) {
+            if (arg instanceof BindingResult) ThrowUtils.checkRequestValid((BindingResult) arg);
+            if (arg instanceof PageRequest) ((PageRequest)arg).checkPageRequest();
+            if (arg instanceof BaseCheckDto) ((BaseCheckDto) arg).checkRequest();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package cn.lime.core.common;
 
+import cn.lime.core.common.dto.PageRequest;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;

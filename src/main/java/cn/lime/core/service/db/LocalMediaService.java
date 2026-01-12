@@ -13,5 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface LocalMediaService extends IService<LocalMedia> {
     void addUrl(String url,Long tagId);
     void deleteUrl(Long urlId);
-    PageResult<LocalMediaVo> pageUrl(Long tagId,Integer current,Integer pageSize);
+    PageResult<LocalMediaVo> pageUrl(Long tagId,Integer current,Integer pageSize,String sortField,String sortOrder);
 }

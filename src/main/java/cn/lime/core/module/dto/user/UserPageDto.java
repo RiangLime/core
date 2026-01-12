@@ -1,6 +1,8 @@
 package cn.lime.core.module.dto.user;
 
-import cn.lime.core.common.PageRequest;
+import cn.lime.core.common.ErrorCode;
+import cn.lime.core.common.ThrowUtils;
+import cn.lime.core.common.dto.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @ClassName: UserPageDto
@@ -30,4 +34,16 @@ public class UserPageDto extends PageRequest implements Serializable {
     private Integer userState;
     @Schema(description = "用户 VIP等级")
     private Integer userVipLevel;
+
+    private final static List<String> SORT_LIST = List.of("registerTime", "last_login_time");
+
+    @Override
+    public void checkRequest() {
+    }
+
+    @Override
+    public void checkPageRequest() {
+        ThrowUtils.throwIf(!SORT_LIST.contains(getSortField()), ErrorCode.PARAMS_ERROR,
+                "可用排序字段:" + String.join(",", SORT_LIST));
+    }
 }

@@ -1,9 +1,10 @@
-package cn.lime.core.common;
+package cn.lime.core.common.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -14,7 +15,8 @@ import java.io.Serializable;
  * @Date: 2023/9/18 16:08
  */
 @Data
-public class PageRequest implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public abstract class PageRequest extends BaseCheckDto implements Serializable {
     /**
      * 升序
      */
@@ -52,4 +54,6 @@ public class PageRequest implements Serializable {
      */
     @Schema(description = "排序顺序（默认升序）ascend/descend")
     private String sortOrder = SORT_ORDER_ASC;
+
+    public abstract void checkPageRequest();
 }

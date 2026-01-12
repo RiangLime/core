@@ -52,8 +52,8 @@ public class LocalMediaServiceImpl extends ServiceImpl<LocalMediaMapper, LocalMe
     }
 
     @Override
-    public PageResult<LocalMediaVo> pageUrl(Long tagId, Integer current, Integer pageSize) {
-        Page<?> page = PageUtils.build(current, pageSize, null, null);
+    public PageResult<LocalMediaVo> pageUrl(Long tagId, Integer current, Integer pageSize,String sortField,String sortOrder) {
+        Page<?> page = PageUtils.build(current, pageSize, sortField, sortOrder);
         Page<LocalMediaVo> vo = baseMapper.pageMedia(tagId,page);
         return new PageResult<>(vo);
     }

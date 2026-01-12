@@ -108,7 +108,7 @@ public class FileStorageController {
     @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.ADMIN)
     @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<PageResult<LocalMediaVo>> pageUrl(@Valid @RequestBody MediaUrlPageDto dto, BindingResult result) {
-        return ResultUtils.success(localMediaService.pageUrl(dto.getTagId(),dto.getCurrent(),dto.getPageSize()));
+        return ResultUtils.success(localMediaService.pageUrl(dto.getTagId(),dto.getCurrent(),dto.getPageSize(),dto.getSortField(),dto.getSortOrder()));
     }
 
     @PostMapping("/listtags")

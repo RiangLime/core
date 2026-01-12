@@ -17,7 +17,7 @@
         gmt_created
     </sql>
     <select id="pageMedia" resultType="cn.lime.core.module.vo.LocalMediaVo">
-        SELECT lm.id as urlId, lm.url, lmt.tag_name as tagName
+        SELECT lm.id as urlId, lm.url, lmt.tag_name as tagName, UNIX_TIMESTAMP(lmt.gmt_created) as createTime
         FROM Local_Media_Tag lmt
                  inner join Local_Media lm on lmt.id = lm.url_tag_id
         <if test="tagId != null">
