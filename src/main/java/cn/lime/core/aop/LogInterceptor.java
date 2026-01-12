@@ -64,6 +64,7 @@ public class LogInterceptor {
         ReqInfo bean = new ReqInfo();
         bean.setUuid(UUID.randomUUID().toString());
         bean.setIp(ip);
+        bean.setUri(url);
         bean.setReqTime(System.currentTimeMillis());
         ReqThreadLocal.setInfo(bean);
 

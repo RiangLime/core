@@ -1,5 +1,6 @@
 package cn.lime.core.controller;
 
+import cn.lime.core.annotation.ApiLimit;
 import cn.lime.core.annotation.AuthCheck;
 import cn.lime.core.annotation.DtoCheck;
 import cn.lime.core.annotation.RequestLog;
@@ -52,6 +53,7 @@ public class FileStorageController {
     @PostMapping("/upload")
     @Operation(summary = "上传文件接口")
     @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.ADMIN)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
         String url = fileStorageService.uploadFile(file);
         return ResultUtils.success(url);
@@ -59,6 +61,7 @@ public class FileStorageController {
     @PostMapping("/uploadavatar")
     @Operation(summary = "上传头像接口")
     @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.USER)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<String> handleAvatarUpload(@RequestParam("file") MultipartFile file) {
         String url = fileStorageService.uploadAvatar(file);
         return ResultUtils.success(url);
@@ -68,6 +71,7 @@ public class FileStorageController {
     @Operation(summary = "上传文件接口")
     @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.ADMIN)
     @Transactional
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<Void> handleFileUpload(@NotNull @RequestParam("file") MultipartFile file,
                                                @NotNull @RequestParam("tagId")String tagId) {
         Long tag = Long.parseLong(tagId);
@@ -84,6 +88,7 @@ public class FileStorageController {
     @PostMapping("/url/upload")
     @Operation(summary = "上传url接口")
     @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.ADMIN)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<Void> uploadUrl(@Valid @RequestBody MediaUrlUploadDto dto, BindingResult result) {
         localMediaService.addUrl(dto.getUrl(),dto.getUrlTagId());
         return ResultUtils.success(null);
@@ -92,6 +97,7 @@ public class FileStorageController {
     @PostMapping("/url/delete")
     @Operation(summary = "删除url接口")
     @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.ADMIN)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<Void> deleteUrl(@Valid @RequestBody MediaUrlDeleteDto dto, BindingResult result) {
         localMediaService.deleteUrl(dto.getUrlId());
         return ResultUtils.success(null);
@@ -100,6 +106,7 @@ public class FileStorageController {
     @PostMapping("/url/page")
     @Operation(summary = "分页查询URL接口")
     @AuthCheck(needPlatform = true, needToken = true, authLevel = AuthLevel.ADMIN)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<PageResult<LocalMediaVo>> pageUrl(@Valid @RequestBody MediaUrlPageDto dto, BindingResult result) {
         return ResultUtils.success(localMediaService.pageUrl(dto.getTagId(),dto.getCurrent(),dto.getPageSize()));
     }
@@ -108,6 +115,7 @@ public class FileStorageController {
     @Operation(summary = "查询所有多媒体标签")
     @AuthCheck(needToken = true,authLevel = AuthLevel.ADMIN)
     @DtoCheck(checkBindResult = true)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<List<LocalMediaTagVo>> listLocalMediaTags(@Valid @RequestBody EmptyDto dto, BindingResult result){
         return ResultUtils.success(localMediaTagService.listTags());
     }
@@ -116,6 +124,7 @@ public class FileStorageController {
     @Operation(summary = "添加多媒体URL标签")
     @AuthCheck(needToken = true,authLevel = AuthLevel.ADMIN)
     @DtoCheck(checkBindResult = true)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<Void> addLocalMediaTag(@Valid @RequestBody MediaTagAddDto dto, BindingResult result){
         localMediaTagService.addTag(dto.getTagName());
         return ResultUtils.success(null);
@@ -125,6 +134,7 @@ public class FileStorageController {
     @Operation(summary = "删除多媒体URL标签")
     @AuthCheck(needToken = true,authLevel = AuthLevel.ADMIN)
     @DtoCheck(checkBindResult = true)
+    @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<Void> deleteLocalMediaTag(@Valid @RequestBody MediaTagDeleteDto dto, BindingResult result){
         localMediaTagService.deleteTag(dto.getId());
         return ResultUtils.success(null);
