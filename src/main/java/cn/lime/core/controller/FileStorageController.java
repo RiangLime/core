@@ -15,6 +15,7 @@ import cn.lime.core.module.vo.LocalMediaTagVo;
 import cn.lime.core.module.vo.LocalMediaVo;
 import cn.lime.core.service.db.LocalMediaService;
 import cn.lime.core.service.db.LocalMediaTagService;
+import cn.lime.core.service.db.UserService;
 import cn.lime.core.service.filestore.FileStorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,6 +50,8 @@ public class FileStorageController {
     private LocalMediaService localMediaService;
     @Resource
     private LocalMediaTagService localMediaTagService;
+    @Resource
+    private UserService userService;
 
     @PostMapping("/upload")
     @Operation(summary = "上传文件接口")
@@ -64,6 +67,7 @@ public class FileStorageController {
     @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<String> handleAvatarUpload(@RequestParam("file") MultipartFile file) {
         String url = fileStorageService.uploadAvatar(file);
+        userService.updateCommonInfo(null,null,url,null,null,null,null);
         return ResultUtils.success(url);
     }
 
