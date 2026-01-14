@@ -1,5 +1,6 @@
 package cn.lime.core.common;
 
+import cn.lime.core.threadlocal.ReqThreadLocal;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -29,6 +30,7 @@ public class BaseResponse<T> implements Serializable {
         this.code = code;
         this.data = data;
         this.message = message;
+        reqId = ReqThreadLocal.getInfo().getUuid();
     }
 
     public BaseResponse(int code, T data) {
