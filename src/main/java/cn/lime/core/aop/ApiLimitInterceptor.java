@@ -39,17 +39,17 @@ public class ApiLimitInterceptor {
     @Before("@annotation(apiLimit)")
     @Transactional
     public void doInterceptor(JoinPoint joinPoint, ApiLimit apiLimit) {
-        StringBuilder redisKey = new StringBuilder();
-        if (apiLimit.hasToken()) {
-            redisKey.append(ReqThreadLocal.getInfo().getUserId());
-        } else {
-            redisKey.append(ReqThreadLocal.getInfo().getIp());
-        }
-        redisKey.append("-");
-        redisKey.append(ReqThreadLocal.getInfo().getUri());
-        Boolean res = redisTemplateMap.get(RedisDb.API_LIMIT.getVal()).opsForValue()
-                .setIfAbsent(redisKey.toString(), "1", apiLimit.rate(), TimeUnit.MILLISECONDS);
-        ThrowUtils.throwIf(Boolean.FALSE.equals(res), ErrorCode.API_LIMIT_EXCEED);
+//        StringBuilder redisKey = new StringBuilder();
+//        if (apiLimit.hasToken()) {
+//            redisKey.append(ReqThreadLocal.getInfo().getUserId());
+//        } else {
+//            redisKey.append(ReqThreadLocal.getInfo().getIp());
+//        }
+//        redisKey.append("-");
+//        redisKey.append(ReqThreadLocal.getInfo().getUri());
+//        Boolean res = redisTemplateMap.get(RedisDb.API_LIMIT.getVal()).opsForValue()
+//                .setIfAbsent(redisKey.toString(), "1", apiLimit.rate(), TimeUnit.MILLISECONDS);
+//        ThrowUtils.throwIf(Boolean.FALSE.equals(res), ErrorCode.API_LIMIT_EXCEED);
     }
 
 }

@@ -83,6 +83,7 @@ public enum ErrorCode {
     WX_INTERFACE_ERROR(31000,"微信接口异常"),
     WX_PHONE_INTERFACE_ERROR(31001,"调用微信手机号接口异常"),
     WX_OPENID_INTERFACE_ERROR(31002,"调用微信OpenID接口异常"),
+    WX_SEND_DELIVER_INFO_ERROR(31003,"调用微信上传发货信息API异常"),
     OPEN_AI_INTERFACE_ERROR(32000,"OpenAI接口异常"),
     ALI_OCR_INTERFACE_ERROR(33000,"调用阿里OCR接口异常"),
     QI_NIU_OSS_INTERFACE_ERROR(34000,"调用七牛OSS接口异常"),
