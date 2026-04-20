@@ -13,7 +13,7 @@ spring:
       max-file-size: 10MB
   application:
     #    服务名
-    name: anxin
+    name: core
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -61,15 +61,5 @@ core:
     mp:
       app-id: ${mp_app_id:wxc449a89ac5cc9210}
       secret-id: ${mp_secret_id:}
-mall:
-  pay:
-    wx:
-      merchant-id: ${wx_pay_merchant_id:}
-      private-key-path: ${wx_pay_private_key_path:}
-      merchant-serial-number: ${wx_pay_serial_number:}
-      api-v3-key: ${wx_pay_api_v3_key:}
-      app-id: ${wx_pay_appid:}
-      certificate-path: ${wx_pay_certificate_path:}
-      notice-url-prefix: ${wx_pay_notice_url_prefix:}
 
 

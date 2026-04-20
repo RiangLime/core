@@ -1,11 +1,10 @@
 package cn.lime.core.service.db;
 
-import cn.lime.core.common.PageResult;
+import cn.lime.core._common.PageResult;
 import cn.lime.core.module.entity.User;
 import cn.lime.core.module.vo.LoginVo;
 import cn.lime.core.module.vo.UserVo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;

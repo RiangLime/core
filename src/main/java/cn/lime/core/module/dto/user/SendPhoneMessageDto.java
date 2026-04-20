@@ -17,4 +17,6 @@ public class SendPhoneMessageDto implements Serializable {
     @Schema(description = "mobilephone")
     private String mobile;
 
+    private String type = "ali";
+
 }

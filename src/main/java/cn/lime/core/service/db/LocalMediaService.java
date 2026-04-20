@@ -1,6 +1,6 @@
 package cn.lime.core.service.db;
 
-import cn.lime.core.common.PageResult;
+import cn.lime.core._common.PageResult;
 import cn.lime.core.module.entity.LocalMedia;
 import cn.lime.core.module.vo.LocalMediaVo;
 import com.baomidou.mybatisplus.extension.service.IService;

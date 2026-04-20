@@ -1,5 +1,6 @@
 package cn.lime.core.module.dto.unidto;
 
+import cn.lime.core._login.strategy.LoginTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,4 +24,9 @@ public class WxEasyLoginDto extends UniEasyLoginDto implements Serializable {
     @Schema(description = "登录小程序端获取到的code")
     @NotNull
     private String openIdCode;
+
+    @Override
+    public String getLoginType() {
+        return LoginTypeEnum.WX.getVal();
+    }
 }

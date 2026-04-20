@@ -1,11 +1,11 @@
 package cn.lime.core.service.db.impl;
 
-import cn.lime.core.common.ErrorCode;
-import cn.lime.core.common.ThrowUtils;
+import cn.lime.core._common.ErrorCode;
+import cn.lime.core._common.ThrowUtils;
 import cn.lime.core.module.entity.LocalMedia;
 import cn.lime.core.module.vo.LocalMediaTagVo;
 import cn.lime.core.service.db.LocalMediaService;
-import cn.lime.core.snowflake.SnowFlakeGenerator;
+import cn.lime.core._snowflake.SnowFlakeGenerator;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.lime.core.module.entity.LocalMediaTag;
 import cn.lime.core.service.db.LocalMediaTagService;

@@ -1,10 +1,10 @@
 package cn.lime.core.service.db.impl;
 
-import cn.lime.core.common.ErrorCode;
-import cn.lime.core.common.ThrowUtils;
-import cn.lime.core.config.CoreParams;
-import cn.lime.core.service.wx.auth.WxMpOuterService;
-import cn.lime.core.utils.ExpressCompanyRecognizer;
+import cn.lime.core._common.ErrorCode;
+import cn.lime.core._common.ThrowUtils;
+import cn.lime.core._config.WxProperties;
+import cn.lime.core._wx.auth.WxMpOuterService;
+import cn.lime.core._utils.ExpressCompanyRecognizer;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.lime.core.module.entity.WxDeliverList;
 import cn.lime.core.service.db.WxDeliverListService;
@@ -27,7 +27,7 @@ public class WxDeliverListServiceImpl extends ServiceImpl<WxDeliverListMapper, W
     implements WxDeliverListService{
 
     @Resource
-    private CoreParams coreParams;
+    private WxProperties wxProperties;
     @Resource
     private WxMpOuterService wxMpOuterService;
 
@@ -46,9 +46,9 @@ public class WxDeliverListServiceImpl extends ServiceImpl<WxDeliverListMapper, W
 
     @Transactional
     public void autoUpdate(){
-        if (!coreParams.getAutoUpdateWxDeliverInfo())
+        if (!wxProperties.getAutoUpdateWxDeliverInfo())
             return;
-        List<WxDeliverList> list = wxMpOuterService.getWxDeliverList(coreParams.getWxMpAppId(),coreParams.getWxMpSecretId());
+        List<WxDeliverList> list = wxMpOuterService.getWxDeliverList(wxProperties.getWxMpAppId(), wxProperties.getWxMpSecretId());
         long count = lambdaQuery().count();
         if (count>0) {
             ThrowUtils.throwIf(!lambdaUpdate().remove(), ErrorCode.DELETE_ERROR, "删除微信运力信息失败");

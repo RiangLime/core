@@ -1,8 +1,8 @@
 package cn.lime.core.module.dto.user;
 
-import cn.lime.core.common.ErrorCode;
-import cn.lime.core.common.ThrowUtils;
-import cn.lime.core.common.dto.PageRequest;
+import cn.lime.core._common.ErrorCode;
+import cn.lime.core._common.ThrowUtils;
+import cn.lime.core._common.dto.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +10,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**

@@ -1,6 +1,6 @@
 package cn.lime.core.service.db.impl;
 
-import cn.lime.core.constant.ThirdAuthorizationType;
+import cn.lime.core._constant.ThirdAuthorizationType;
 import cn.lime.core.mapper.UserthirdauthorizationMapper;
 import cn.lime.core.module.entity.Userthirdauthorization;
 import cn.lime.core.service.db.UserthirdauthorizationService;

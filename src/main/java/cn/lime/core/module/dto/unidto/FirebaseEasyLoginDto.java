@@ -1,5 +1,6 @@
 package cn.lime.core.module.dto.unidto;
 
+import cn.lime.core._login.strategy.LoginTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,4 +33,9 @@ public class FirebaseEasyLoginDto extends UniEasyLoginDto implements Serializabl
     private String email;
     @Schema(description = "邀请用户ID")
     private String inviteUserCode;
+
+    @Override
+    public String getLoginType() {
+        return LoginTypeEnum.FIREBASE.getVal();
+    }
 }

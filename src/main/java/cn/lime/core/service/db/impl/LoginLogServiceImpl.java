@@ -3,12 +3,10 @@ package cn.lime.core.service.db.impl;
 import cn.lime.core.mapper.LoginLogMapper;
 import cn.lime.core.module.entity.LoginLog;
 import cn.lime.core.service.db.LoginLogService;
-import cn.lime.core.snowflake.SnowFlakeGenerator;
+import cn.lime.core._snowflake.SnowFlakeGenerator;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 /**
 * @author riang

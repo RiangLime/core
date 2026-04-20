@@ -1,5 +1,6 @@
 package cn.lime.core.module.dto.unidto;
 
+import cn.lime.core._login.strategy.LoginTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -28,4 +29,8 @@ public class AccountLoginDto extends UniEasyLoginDto implements Serializable {
     @NotNull
     private String pwd;
 
+    @Override
+    public String getLoginType() {
+        return LoginTypeEnum.ACCOUNT.getVal();
+    }
 }

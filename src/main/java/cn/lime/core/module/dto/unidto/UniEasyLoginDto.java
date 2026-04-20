@@ -10,4 +10,5 @@ import lombok.Data;
  */
 @Data
 public abstract class UniEasyLoginDto {
+    public abstract String getLoginType();
 }

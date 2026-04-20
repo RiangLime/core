@@ -1,14 +1,12 @@
 package cn.lime.core.service.db.impl;
 
 
-import cn.lime.core.constant.NickWordTypeEnum;
 import cn.lime.core.mapper.NicknamerepoMapper;
 import cn.lime.core.module.entity.Nicknamerepo;
 import cn.lime.core.service.db.NicknamerepoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Random;
 
 /**
