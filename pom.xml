@@ -4,7 +4,7 @@
 
     <groupId>cn.lime</groupId>
     <artifactId>core</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <name>core</name>
@@ -258,6 +258,11 @@
             <groupId>com.aliyun</groupId>
             <artifactId>darabonba-stream</artifactId>
             <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>alibabacloud-oss-v2</artifactId>
+            <version>0.3.2</version>
         </dependency>
 
         <!-- dom4j xml解析 -->

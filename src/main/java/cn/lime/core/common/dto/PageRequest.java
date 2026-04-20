@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @ClassName: PageRequest
@@ -46,7 +47,7 @@ public abstract class PageRequest extends BaseCheckDto implements Serializable {
     /**
      * 排序字段
      */
-    @Schema(description = "排序字段")
+    @Schema(description = "排序字段 非数据库字段")
     private String sortField;
 
     /**
@@ -56,4 +57,5 @@ public abstract class PageRequest extends BaseCheckDto implements Serializable {
     private String sortOrder = SORT_ORDER_ASC;
 
     public abstract void checkPageRequest();
+    public abstract String getRealSortField();
 }

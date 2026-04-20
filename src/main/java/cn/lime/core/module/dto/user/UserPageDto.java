@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: UserPageDto
@@ -35,7 +36,10 @@ public class UserPageDto extends PageRequest implements Serializable {
     @Schema(description = "用户 VIP等级")
     private Integer userVipLevel;
 
-    private final static List<String> SORT_LIST = List.of("registerTime", "last_login_time");
+    private Map<String,String> SORT_MAP = Map.of(
+            "registerTime","registerTime",
+            "lastLoginTime","last_login_time"
+    );
 
     @Override
     public void checkRequest() {
@@ -43,7 +47,12 @@ public class UserPageDto extends PageRequest implements Serializable {
 
     @Override
     public void checkPageRequest() {
-        ThrowUtils.throwIf(!SORT_LIST.contains(getSortField()), ErrorCode.PARAMS_ERROR,
-                "可用排序字段:" + String.join(",", SORT_LIST));
+        ThrowUtils.throwIf(!SORT_MAP.containsKey(getSortField()), ErrorCode.PARAMS_ERROR,
+                "可用排序字段:" + String.join(",", SORT_MAP.keySet()));
+    }
+
+    @Override
+    public String getRealSortField() {
+        return SORT_MAP.get(getSortField());
     }
 }

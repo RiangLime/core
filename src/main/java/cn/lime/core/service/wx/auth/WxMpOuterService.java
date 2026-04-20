@@ -59,6 +59,13 @@ public class WxMpOuterService {
     @Resource
     private UserthirdauthorizationService userthirdauthorizationService;
 
+    /**
+     * 获取微信授权信息
+     * @param appId 小程序APPID
+     * @param secretId 小程序 secretId
+     * @param code 前端获取到的授权码
+     * @return
+     */
     public WxAuthorizeInfo getWxAuthorizeInfo(String appId, String secretId, String code) {
         Map<String, Object> paramMap = new HashMap<String, Object>() {
             {
@@ -75,6 +82,14 @@ public class WxMpOuterService {
         return wxAuthorizeInfo;
     }
 
+    /**
+     * 获取微信用户手机ID
+     * @param appId 小程序APPID
+     * @param secretId secretId
+     * @param code 前端授权码
+     * @return
+     * @throws BusinessException
+     */
     public WxPhoneInfo getWxPhoneInfo(String appId, String secretId, String code) throws BusinessException {
         AccessTokenInfo token = getAccessToken(appId, secretId);
         String url = String.format(coreParams.getWxMpAuthMobileUrl(), token.getAccessToken());
@@ -99,7 +114,12 @@ public class WxMpOuterService {
 
     }
 
-
+    /**
+     * 获取Token
+     * @param appId APPID
+     * @param secretId secretID
+     * @return
+     */
     public AccessTokenInfo getAccessToken(String appId, String secretId) {
         ThrowUtils.throwIf(redisTemplateMap.isEmpty(), ErrorCode.INIT_FAIL, "redis未正确配置");
         Object accessTokenJson = redisTemplateMap.get(RedisDb.WX_ACCESS_TOKEN.getVal()).opsForValue().get(appId + secretId);
@@ -119,10 +139,28 @@ public class WxMpOuterService {
         return JSON.parseObject(getResult, AccessTokenInfo.class);
     }
 
+    /**
+     * 缺省获取分享码
+     * @param appId
+     * @param secretId
+     * @param page
+     * @param scene
+     * @return
+     */
     public String getShareCode(String appId, String secretId, String page, String scene) {
         return getShareCode(appId, secretId, page, scene, true, "release");
     }
 
+    /**
+     * 获取分享码
+     * @param appId
+     * @param secretId
+     * @param page
+     * @param scene
+     * @param checkPath
+     * @param env
+     * @return
+     */
     public String getShareCode(String appId, String secretId, String page, String scene, Boolean checkPath, String env) {
         AccessTokenInfo token = getAccessToken(appId, secretId);
         String url = String.format(coreParams.getWxMpUnlimitedQRCodeUrl(), token.getAccessToken());
@@ -164,15 +202,44 @@ public class WxMpOuterService {
         }
     }
 
+    /**
+     * 向用户推送消息
+     * @param appId
+     * @param secretId
+     * @param templateId
+     * @param page
+     * @param openId
+     * @param jsonObj
+     */
     public void sendMessageToUser(String appId, String secretId, String templateId, String page, String openId, JSONObject jsonObj) {
         sendMessageToUser(appId, secretId, templateId, page, openId, jsonObj, "formal", "zh_CN");
     }
 
+    /**
+     * 向用户推送消息
+     * @param appId
+     * @param secretId
+     * @param templateId
+     * @param page
+     * @param openId
+     * @param jsonObj
+     * @param env
+     */
     public void sendMessageToUser(String appId, String secretId, String templateId, String page, String openId, JSONObject jsonObj, String env) {
         sendMessageToUser(appId, secretId, templateId, page, openId, jsonObj, env, "zh_CN");
     }
 
-
+    /**
+     * 向用户推送消息
+     * @param appId
+     * @param secretId
+     * @param templateId
+     * @param page
+     * @param openId
+     * @param jsonObj
+     * @param mpState
+     * @param lang
+     */
     public void sendMessageToUser(String appId, String secretId, String templateId, String page, String openId, JSONObject jsonObj, String mpState, String lang) {
         AccessTokenInfo token = getAccessToken(appId, secretId);
         String url = String.format(coreParams.getWxMpSendMessageUrl(), token.getAccessToken());
@@ -200,7 +267,19 @@ public class WxMpOuterService {
                 ErrorCode.WX_PHONE_INTERFACE_ERROR, respJson.get("errmsg").toString());
     }
 
-
+    /**
+     * 推送物流信息
+     * @param appId
+     * @param secretId
+     * @param userId
+     * @param merchId
+     * @param outTradeNo
+     * @param logisticsType
+     * @param itemDesc
+     * @param deliverId
+     * @param expressCompany
+     * @param receiverContact
+     */
     public void uploadDeliverInfoToWx(String appId, String secretId, Long userId, String merchId, String outTradeNo, WxSendDeliverApiLogisticTypeEnum logisticsType,
                                       String itemDesc, String deliverId, String expressCompany, String receiverContact) {
         ThrowUtils.throwIf(itemDesc.length() > 100, ErrorCode.PARAMS_ERROR, "商品信息过长，请控制在100以下");
@@ -214,13 +293,8 @@ public class WxMpOuterService {
         // 固定使用使用下单商户号和商户侧单号
         orderKey.put("order_number_type", 1);
         orderKey.put("mchid", merchId);
-
-
         orderKey.put("out_trade_no", outTradeNo);
-
-
         param.put("order_key", orderKey);
-
         param.put("logistics_type", logisticsType.getVal());
         // 默认统一发货
         param.put("delivery_mode", 1);
@@ -239,14 +313,11 @@ public class WxMpOuterService {
         ship.put("contact", contactorInfo);
         shipList.add(ship);
         param.put("shipping_list", shipList);
-
         String beijingTime = OffsetDateTime.now(ZoneId.of("Asia/Shanghai")).toString();
         param.put("upload_time", beijingTime);
-
         JSONObject payer = new JSONObject();
         payer.put("openid", openId);
         param.put("payer", payer);
-
         // 构造请求体结束
         // 发送请求
         AccessTokenInfo token = getAccessToken(appId, secretId);
@@ -268,6 +339,12 @@ public class WxMpOuterService {
                 ErrorCode.WX_SEND_DELIVER_INFO_ERROR, respJson.get("errmsg").toString());
     }
 
+    /**
+     * 获取微信对接的所有物流信息
+     * @param appId
+     * @param secretId
+     * @return
+     */
     public List<WxDeliverList> getWxDeliverList(String appId, String secretId) {
         // 构造请求体结束
         // 发送请求

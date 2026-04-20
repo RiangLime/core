@@ -7,6 +7,7 @@ import cn.lime.core.annotation.RequestLog;
 import cn.lime.core.common.BaseResponse;
 import cn.lime.core.common.PageResult;
 import cn.lime.core.common.ResultUtils;
+import cn.lime.core.constant.AuthLevel;
 import cn.lime.core.module.dto.EmptyDto;
 import cn.lime.core.module.dto.user.UserPageDto;
 import cn.lime.core.module.entity.User;
@@ -23,7 +24,7 @@ import java.util.List;
 
 /**
  * @ClassName: AdminUserController
- * @Description: TODO
+ * @Description: 管理员
  * @Author: Lime
  * @Date: 2024/7/31 12:15
  */
@@ -39,12 +40,12 @@ public class AdminUserController {
 
     @PostMapping("/page")
     @Operation(summary = "用户分页查询")
-//    @AuthCheck(needToken = true,needPlatform = true)
+    @AuthCheck(needToken = true,needPlatform = true,authLevel = AuthLevel.ADMIN)
     @DtoCheck(checkBindResult = true)
     @ApiLimit(hasToken = true, rate = 1000)
     public BaseResponse<PageResult<UserVo>> page(@Valid @RequestBody UserPageDto dto, BindingResult result) {
         return ResultUtils.success(userService.page(dto.getQueryField(), dto.getRegisterStart(), dto.getRegisterEnd(),
                 dto.getUserState(), dto.getUserVipLevel(), dto.getCurrent(), dto.getPageSize(), dto.getSortOrder(),
-                dto.getSortField()));
+                dto.getRealSortField()));
     }
 }

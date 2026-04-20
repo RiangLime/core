@@ -2,7 +2,7 @@ package cn.lime.core.utils;
 
 /**
  * @ClassName: TimeStampUtils
- * @Description: TODO
+ * @Description: 时间戳工具类
  * @Author: Lime
  * @Date: 2024/8/23 16:12
  */

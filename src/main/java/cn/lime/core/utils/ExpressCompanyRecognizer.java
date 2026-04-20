@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 /**
  * @ClassName: ExpressCompanyRecognizer
- * @Description: TODO 描述类的功能
+ * @Description: 微信运力正则识别工具
  * @Author: riang
  * @Date: 2026/2/26 22:49
  */

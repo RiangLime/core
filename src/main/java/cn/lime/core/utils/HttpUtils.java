@@ -1,13 +1,5 @@
 package cn.lime.core.utils;
 
-/**
- * @ClassName: HttpUtils
- * @Description: http工具
- * @Author: Lime
- * @Date: 2023/6/29 17:11
- */
-
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -43,6 +35,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @ClassName: HttpUtils
+ * @Description: http工具
+ * @Author: Lime
+ * @Date: 2023/6/29 17:11
+ */
 public class HttpUtils {
 
     /**
