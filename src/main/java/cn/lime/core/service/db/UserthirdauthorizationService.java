@@ -9,5 +9,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2024-03-15 12:13:40
 */
 public interface UserthirdauthorizationService extends IService<Userthirdauthorization> {
-
+    String getUserWxOpenId(Long userId);
 }

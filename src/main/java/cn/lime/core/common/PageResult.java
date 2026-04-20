@@ -28,6 +28,17 @@ public final class PageResult<T> {
 
     private Integer pages;
 
+    public PageResult() {
+    }
+
+    public PageResult(List<T> list, Integer current, Integer total, Integer size, Integer pages) {
+        this.list = list;
+        this.current = current;
+        this.total = total;
+        this.size = size;
+        this.pages = pages;
+    }
+
     public PageResult(IPage<?> page, List<T> data) {
 
         int start = (int) ((page.getCurrent() - 1) * page.getSize() < page.getRecords().size() ? (page.getCurrent() - 1) * page.getSize() : page.getRecords().size());

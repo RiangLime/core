@@ -78,6 +78,13 @@ public class CoreParams {
     private String wxMpSendMessagePage;
     @Value("${core.wx-auth.mp.send-message-env:formal}")
     private String wxMpSendMessageEnv;
+    @Value("${core.wx-auth.send-deliver-info-url:https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token=%s}")
+    private String wxSendDeliverInfoUrl;
+    @Value("${core.wx-auth-deliver-info-url:https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/get_delivery_list?access_token=%s}")
+    private String wxDeliverInfoUrl;
+    @Value("${core.auto-update-wx-deliver-info:true}")
+    private Boolean autoUpdateWxDeliverInfo;
+
 
     @Value("${core.wx.mp.app-id:}")
     private String wxMpAppId;
